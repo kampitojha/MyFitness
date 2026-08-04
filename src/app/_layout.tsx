@@ -1,7 +1,7 @@
 import '@/global.css';
 
 import { useCallback, useEffect } from 'react';
-import { View, useColorScheme, Appearance } from 'react-native';
+import { View, useColorScheme, Appearance, Platform } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -51,10 +51,12 @@ export default function RootLayout() {
   const themePref = useSettingsStore((s) => s.theme);
 
   useEffect(() => {
-    if (themePref === 'system') {
-      Appearance.setColorScheme('unspecified');
-    } else {
-      Appearance.setColorScheme(scheme === 'dark' ? 'dark' : 'light');
+    if (Platform.OS !== 'web' && typeof Appearance?.setColorScheme === 'function') {
+      if (themePref === 'system') {
+        Appearance.setColorScheme('unspecified');
+      } else {
+        Appearance.setColorScheme(scheme === 'dark' ? 'dark' : 'light');
+      }
     }
   }, [themePref, scheme]);
 
