@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { springs } from '@/theme';
+import { useTheme } from '@/hooks/use-theme';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -23,6 +24,7 @@ export interface BottomSheetProps {
 
 export function BottomSheet({ visible, onClose, title, children, snapTo = 0.6, dismissable = true }: BottomSheetProps) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useTheme();
   const translateY = useSharedValue(SCREEN_HEIGHT);
   const maxHeight = Math.min(SCREEN_HEIGHT - insets.top - 24, Math.round(SCREEN_HEIGHT * Math.max(snapTo, 0.7)));
 
@@ -65,10 +67,9 @@ export function BottomSheet({ visible, onClose, title, children, snapTo = 0.6, d
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{ flex: 1 }}
       >
-        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+        <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'transparent' }}>
           <Animated.View
-            style={[overlayStyle, { position: 'absolute', inset: 0 }]}
-            className="bg-black/50"
+            style={[overlayStyle, { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.65)' }]}
           >
             {dismissable ? (
               <Pressable
@@ -84,9 +85,17 @@ export function BottomSheet({ visible, onClose, title, children, snapTo = 0.6, d
             <Animated.View
               style={[
                 sheetStyle,
-                { paddingBottom: insets.bottom + 20 },
+                {
+                  paddingBottom: insets.bottom + 20,
+                  backgroundColor: isDark ? '#14181A' : '#FFFFFF',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: -4 },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 16,
+                  elevation: 24,
+                },
               ]}
-              className="bottom-0 left-0 right-0 rounded-t-[28px] bg-surface shadow-2xl dark:bg-neutral-900"
+              className="bottom-0 left-0 right-0 rounded-t-[28px] bg-white shadow-2xl dark:bg-neutral-900"
             >
               <View className="items-center pt-3 pb-2">
                 <View className="h-1.5 w-10 rounded-full bg-neutral-300 dark:bg-neutral-700" />
@@ -103,7 +112,7 @@ export function BottomSheet({ visible, onClose, title, children, snapTo = 0.6, d
               <ScrollView
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 12 }}
+                contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 16 }}
               >
                 {children}
               </ScrollView>
