@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
-  Target, Ruler, Weight as WeightIcon, Cake, Zap, Bell,
-  ShieldCheck, CircleHelp, MessageSquareText, LogOut, Scale, Sparkles, Settings,
+  Target, Ruler, Weight as WeightIcon, Zap, Bell,
+  ShieldCheck, CircleHelp, MessageSquareText, LogOut, Scale, Sparkles, Settings, Pencil,
 } from 'lucide-react-native';
 
 import { Screen } from '@/components/ui/screen';
@@ -66,6 +66,7 @@ export default function ProfileScreen() {
         </Text>
       </View>
 
+      {/* Profile card */}
       <View className="mb-5 flex-row items-center gap-4 rounded-[24px] bg-surface p-5 shadow-sm dark:bg-neutral-900">
         <Avatar name={profile?.name} uri={profile?.photoUri} size={64} />
         <View className="flex-1 gap-0.5">
@@ -79,6 +80,13 @@ export default function ProfileScreen() {
             Goal: {profile?.goalType ?? '—'} · {formatNumber(profile?.age ?? 0)}y
           </Text>
         </View>
+        <Button
+          label="Edit"
+          variant="soft"
+          size="sm"
+          onPress={() => router.push('/edit-profile')}
+          icon={<Pencil size={14} color="#0E7A4A" />}
+        />
       </View>
 
       <View className="mb-5 flex-row gap-3">
@@ -104,9 +112,9 @@ export default function ProfileScreen() {
           onPress={() => setGoalsOpen(true)}
         />
         <SettingsRow
-          label="Body details"
-          icon={<Cake size={18} color="#0E7A4A" />}
-          onPress={() => router.push('/(onboarding)')}
+          label="Edit profile & body details"
+          icon={<Pencil size={18} color="#0E7A4A" />}
+          onPress={() => router.push('/edit-profile')}
         />
       </View>
 
