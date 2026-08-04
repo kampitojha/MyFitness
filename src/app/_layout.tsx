@@ -7,14 +7,11 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 
 import { queryClient } from '@/lib/query-client';
 import { useSettingsStore } from '@/store/settings.store';
 import { useHasCompletedOnboarding } from '@/hooks/use-profile';
 import { Spinner } from '@/components/ui/spinner';
-
-process.env.EXPO_ROUTER_DISABLE_RN_NAVIGATION_CHECK = '1';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,7 +27,7 @@ function RootNavigator() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-background dark:bg-background-dark">
+      <View className="flex-1 items-center justify-center">
         <Spinner size="large" />
       </View>
     );
@@ -74,11 +71,9 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <View className="flex-1 bg-background dark:bg-background-dark">
-              <RootNavigator />
-            </View>
-          </ThemeProvider>
+          <View className="flex-1">
+            <RootNavigator />
+          </View>
         </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
