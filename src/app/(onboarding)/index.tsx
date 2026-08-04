@@ -3,7 +3,7 @@ import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TrendingDown, Minus, TrendingUp, Ruler, Weight as WeightIcon, Sparkles } from 'lucide-react-native';
-import { MotiView } from 'moti';
+
 
 import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
@@ -109,12 +109,7 @@ export default function OnboardingScreen() {
         contentContainerClassName="px-6"
         contentContainerStyle={{ paddingBottom: 16 }}
       >
-        <MotiView
-          key={step}
-          from={{ opacity: 0, translateY: 16 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: 'timing', duration: 280 }}
-        >
+        <View key={step}>
           <Text variant="title1" className="mb-2 text-ink dark:text-neutral-50">
             {title}
           </Text>
@@ -248,7 +243,7 @@ export default function OnboardingScreen() {
               </Text>
             </View>
           )}
-        </MotiView>
+        </View>
       </ScrollView>
 
       <View className="px-6">
