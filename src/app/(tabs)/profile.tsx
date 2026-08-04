@@ -113,8 +113,8 @@ export default function ProfileScreen() {
       <Text variant="title3" className="mb-3 text-ink dark:text-neutral-50">
         Preferences
       </Text>
-      <View className="mb-5 flex-row items-center justify-between rounded-2xl bg-surface p-4 dark:bg-neutral-900">
-        <View className="flex-row items-center gap-3">
+      <View className="mb-5 rounded-2xl bg-surface p-4 shadow-sm dark:bg-neutral-900">
+        <View className="mb-3 flex-row items-center gap-3">
           <View className="h-9 w-9 items-center justify-center rounded-xl bg-surface-alt dark:bg-neutral-800">
             <Settings size={18} color="#0E7A4A" />
           </View>
@@ -122,7 +122,7 @@ export default function ProfileScreen() {
             Appearance
           </Text>
         </View>
-        <SegmentedControl options={THEME_OPTIONS} value={theme} onChange={setTheme} className="w-[52%]" />
+        <SegmentedControl options={THEME_OPTIONS} value={theme} onChange={setTheme} className="w-full" />
       </View>
 
       <SettingsRow

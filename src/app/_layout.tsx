@@ -37,7 +37,14 @@ export default function RootLayout() {
   const themePref = useSettingsStore((s) => s.theme);
 
   useEffect(() => {
-    if (Platform.OS !== 'web' && typeof Appearance?.setColorScheme === 'function') {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      const root = document.documentElement;
+      if (scheme === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+    } else if (Platform.OS !== 'web' && typeof Appearance?.setColorScheme === 'function') {
       if (themePref === 'system') {
         Appearance.setColorScheme('unspecified');
       } else {
