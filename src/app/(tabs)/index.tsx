@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Flame, Search, Dumbbell, Sparkles, Plus } from 'lucide-react-native';
+import { Flame, Search, Dumbbell, Sparkles } from 'lucide-react-native';
 
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
@@ -17,6 +17,9 @@ import { MealsSection } from '@/features/home/components/meals-section';
 import { FoodSearchModal } from '@/features/food-search/components/food-search-modal';
 import { AICoachSheet } from '@/features/ai-coach/components/ai-coach-sheet';
 import { WorkoutModal } from '@/features/workouts/components/workout-modal';
+import { FitnessWidgets } from '@/features/home/components/fitness-widgets';
+import { SupplementModal } from '@/features/supplements/components/supplement-modal';
+import { SleepLogModal } from '@/features/sleep/components/sleep-log-modal';
 
 import { useProfile } from '@/hooks/use-profile';
 import { useDailyTotals, useMealsForDate } from '@/hooks/use-meals';
@@ -51,6 +54,8 @@ export default function HomeScreen() {
   const [foodSearchOpen, setFoodSearchOpen] = useState(false);
   const [aiCoachOpen, setAiCoachOpen] = useState(false);
   const [workoutOpen, setWorkoutOpen] = useState(false);
+  const [supplementOpen, setSupplementOpen] = useState(false);
+  const [sleepOpen, setSleepOpen] = useState(false);
 
   const macros = useMemo(
     () => totals ?? { calories: 0, protein: 0, carbs: 0, fat: 0 },
@@ -138,6 +143,11 @@ export default function HomeScreen() {
       </View>
 
       <View className="gap-4">
+        <FitnessWidgets
+          onOpenSupplements={() => setSupplementOpen(true)}
+          onOpenSleep={() => setSleepOpen(true)}
+        />
+
         <CaloriesCard consumed={macros} goals={goals} />
 
         {workoutBurn && workoutBurn > 0 ? (
@@ -178,6 +188,8 @@ export default function HomeScreen() {
       <FoodSearchModal visible={foodSearchOpen} onClose={() => setFoodSearchOpen(false)} />
       <AICoachSheet visible={aiCoachOpen} onClose={() => setAiCoachOpen(false)} />
       <WorkoutModal visible={workoutOpen} onClose={() => setWorkoutOpen(false)} />
+      <SupplementModal visible={supplementOpen} onClose={() => setSupplementOpen(false)} />
+      <SleepLogModal visible={sleepOpen} onClose={() => setSleepOpen(false)} />
 
       <BottomSheet visible={waterOpen} onClose={() => setWaterOpen(false)} title="Log water">
         <View className="flex-row flex-wrap gap-3">

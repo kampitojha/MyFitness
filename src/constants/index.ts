@@ -8,6 +8,9 @@ export const STORAGE_KEYS = {
   onboarded: 'nutrascan/onboarded',
   auth: 'nutrascan/auth',
   settings: 'nutrascan/settings',
+  supplements: 'nutrascan/supplements',
+  sleep: 'nutrascan/sleep',
+  notifications: 'nutrascan/notifications',
 } as const;
 
 export const QUERY_KEYS = {

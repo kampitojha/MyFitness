@@ -12,6 +12,8 @@ import { BarChart } from '@/features/progress/components/bar-chart';
 import { StreakCard } from '@/features/progress/components/streak-card';
 import { AchievementCard } from '@/features/progress/components/achievement-card';
 import { ShareCardModal } from '@/features/progress/components/share-card-modal';
+import { WeeklyReportCard } from '@/features/progress/components/weekly-report-card';
+import { StreakHeatmap } from '@/features/progress/components/streak-heatmap';
 
 import { useTrends } from '@/hooks/use-trends';
 import { useAchievements } from '@/hooks/use-achievements';
@@ -144,7 +146,18 @@ export default function ProgressScreen() {
         />
       </View>
 
+      <View className="mb-5">
+        <WeeklyReportCard />
+      </View>
+
       <StreakCard current={currentStreak} longest={longestStreak} />
+
+      <Text variant="title3" className="mb-3 mt-5 text-ink dark:text-neutral-50">
+        Consistency Heatmap
+      </Text>
+      <View className="mb-5 rounded-[22px] bg-surface p-4 shadow-sm dark:bg-neutral-900">
+        <StreakHeatmap />
+      </View>
 
       <View className="mb-3 mt-6 flex-row items-center gap-2">
         <Trophy size={18} color="#0E7A4A" />
