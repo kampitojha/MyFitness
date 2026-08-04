@@ -1,19 +1,22 @@
 import { useMemo, useState } from 'react';
 import { View, useWindowDimensions } from 'react-native';
-import { Flame, Beef, Droplets, Weight as WeightIcon, Trophy } from 'lucide-react-native';
+import { Flame, Beef, Droplets, Weight as WeightIcon, Trophy, Share2, FileText } from 'lucide-react-native';
 
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
+import { Button } from '@/components/ui/button';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { MetricCard } from '@/features/progress/components/metric-card';
 import { AreaChart } from '@/features/progress/components/area-chart';
 import { BarChart } from '@/features/progress/components/bar-chart';
 import { StreakCard } from '@/features/progress/components/streak-card';
 import { AchievementCard } from '@/features/progress/components/achievement-card';
+import { ShareCardModal } from '@/features/progress/components/share-card-modal';
 
 import { useTrends } from '@/hooks/use-trends';
 import { useAchievements } from '@/hooks/use-achievements';
 import { useProfile } from '@/hooks/use-profile';
+import { generateWeeklyReportPDF } from '@/utils/pdf-exporter';
 
 import { MACRO_COLORS } from '@/constants/macros';
 import type { TimeRange } from '@/types/progress';
@@ -29,6 +32,7 @@ export default function ProgressScreen() {
   const { width } = useWindowDimensions();
   const { data: profile } = useProfile();
   const [range, setRange] = useState<TimeRange>('week');
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   const trends = useTrends(range);
   const { achievements, currentStreak, longestStreak } = useAchievements();
@@ -50,13 +54,32 @@ export default function ProgressScreen() {
 
   return (
     <Screen edges={['top']} contentContainerStyle={{ paddingBottom: 130 }}>
-      <View className="mb-4 mt-2">
-        <Text variant="title1" className="text-ink dark:text-neutral-50">
-          Progress
-        </Text>
-        <Text variant="bodySmall" color="secondary">
-          Your nutrition, week over week
-        </Text>
+      <View className="mb-4 mt-2 flex-row items-center justify-between">
+        <View>
+          <Text variant="title1" className="text-ink dark:text-neutral-50">
+            Progress
+          </Text>
+          <Text variant="bodySmall" color="secondary">
+            Your nutrition, week over week
+          </Text>
+        </View>
+
+        <View className="flex-row items-center gap-2">
+          <Button
+            label="Share"
+            variant="soft"
+            size="sm"
+            onPress={() => setShareModalOpen(true)}
+            icon={<Share2 size={15} color="#0E7A4A" />}
+          />
+          <Button
+            label="PDF"
+            variant="soft"
+            size="sm"
+            onPress={generateWeeklyReportPDF}
+            icon={<FileText size={15} color="#0E7A4A" />}
+          />
+        </View>
       </View>
 
       <SegmentedControl options={RANGES} value={range} onChange={setRange} className="mb-5" />
@@ -143,6 +166,8 @@ export default function ProgressScreen() {
       <Text variant="caption" color="muted" className="mt-4 text-center">
         {percent(averages.calories, goalCalories)}% of daily calorie goal on average
       </Text>
+
+      <ShareCardModal visible={shareModalOpen} onClose={() => setShareModalOpen(false)} />
     </Screen>
   );
 }

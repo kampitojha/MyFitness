@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Flame } from 'lucide-react-native';
+import { Flame, Search, Dumbbell, Sparkles, Plus } from 'lucide-react-native';
 
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { Avatar } from '@/components/avatar';
-import { Button } from '@/components/ui/button';
+import { Button, IconButton } from '@/components/ui/button';
 import { PressableScale } from '@/components/ui/pressable-scale';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { CaloriesCard } from '@/features/home/components/calories-card';
@@ -14,9 +14,15 @@ import { WaterCard } from '@/features/home/components/water-card';
 import { InsightCard } from '@/features/home/components/insight-card';
 import { MealsSection } from '@/features/home/components/meals-section';
 
+import { FoodSearchModal } from '@/features/food-search/components/food-search-modal';
+import { AICoachSheet } from '@/features/ai-coach/components/ai-coach-sheet';
+import { WorkoutModal } from '@/features/workouts/components/workout-modal';
+
 import { useProfile } from '@/hooks/use-profile';
 import { useDailyTotals, useMealsForDate } from '@/hooks/use-meals';
 import { useWaterTotal, useAddWater } from '@/hooks/use-tracker';
+import { useWorkoutBurnForDate } from '@/hooks/use-workouts';
+import { useTheme } from '@/hooks/use-theme';
 
 import { toISODate, formatLong } from '@/utils/date';
 import { formatNumber } from '@/utils/number';
@@ -32,14 +38,19 @@ function greeting(date = new Date()): string {
 export default function HomeScreen() {
   const router = useRouter();
   const today = toISODate();
+  const { colors } = useTheme();
 
   const { data: profile } = useProfile();
   const { data: totals } = useDailyTotals(today);
   const { data: meals, isLoading: mealsLoading } = useMealsForDate(today);
+  const { data: workoutBurn } = useWorkoutBurnForDate(today);
   const waterTotal = useWaterTotal(today);
   const addWater = useAddWater();
 
   const [waterOpen, setWaterOpen] = useState(false);
+  const [foodSearchOpen, setFoodSearchOpen] = useState(false);
+  const [aiCoachOpen, setAiCoachOpen] = useState(false);
+  const [workoutOpen, setWorkoutOpen] = useState(false);
 
   const macros = useMemo(
     () => totals ?? { calories: 0, protein: 0, carbs: 0, fat: 0 },
@@ -62,7 +73,7 @@ export default function HomeScreen() {
       return { title: 'Protein goal hit', message: `You’ve reached your protein target of ${formatNumber(goals.protein)}g. Nice work!` };
     }
     if (macros.calories === 0) {
-      return { title: 'Ready when you are', message: 'Scan your first meal and NutraScan will estimate its nutrition for you.' };
+      return { title: 'Ready when you are', message: 'Scan your first meal or search foods to start tracking nutrition in seconds.' };
     }
     return { title: 'On a roll', message: `You’ve logged ${meals?.length ?? 0} meals so far today. Keep building the habit.` };
   }, [profile, goals, macros, meals]);
@@ -70,9 +81,9 @@ export default function HomeScreen() {
   const scanNow = useCallback(() => router.push('/scan'), [router]);
 
   return (
-    <Screen edges={['top']} contentContainerStyle={{ paddingBottom: 130 }}>
+    <Screen edges={['top']} contentContainerStyle={{ paddingBottom: 140 }}>
       {/* Header */}
-      <View className="mb-5 mt-2 flex-row items-center justify-between">
+      <View className="mb-4 mt-2 flex-row items-center justify-between">
         <View className="gap-0.5">
           <Text variant="footnote" color="muted">
             {formatLong(today)}
@@ -81,9 +92,18 @@ export default function HomeScreen() {
             {greeting()}
           </Text>
         </View>
-        <PressableScale onPress={() => router.push('/profile')}>
-          <Avatar name={profile?.name} size={46} />
-        </PressableScale>
+
+        <View className="flex-row items-center gap-2">
+          <IconButton
+            variant="surface"
+            label="AI Coach Assistant"
+            onPress={() => setAiCoachOpen(true)}
+            icon={<Sparkles size={20} color="#0E7A4A" />}
+          />
+          <PressableScale onPress={() => router.push('/profile')}>
+            <Avatar name={profile?.name} size={44} />
+          </PressableScale>
+        </View>
       </View>
 
       {!profile?.onboardingCompleted ? (
@@ -97,8 +117,45 @@ export default function HomeScreen() {
         </View>
       ) : null}
 
+      {/* Quick Action Toolbar */}
+      <View className="mb-4 flex-row gap-2.5">
+        <Button
+          label="Search Food"
+          variant="soft"
+          size="sm"
+          className="flex-1"
+          onPress={() => setFoodSearchOpen(true)}
+          icon={<Search size={16} color="#0E7A4A" />}
+        />
+        <Button
+          label="Log Workout"
+          variant="soft"
+          size="sm"
+          className="flex-1"
+          onPress={() => setWorkoutOpen(true)}
+          icon={<Dumbbell size={16} color="#0E7A4A" />}
+        />
+      </View>
+
       <View className="gap-4">
         <CaloriesCard consumed={macros} goals={goals} />
+
+        {workoutBurn && workoutBurn > 0 ? (
+          <View className="flex-row items-center justify-between rounded-2xl bg-surface p-4 border border-border/60 dark:bg-neutral-900 dark:border-neutral-800">
+            <View className="flex-row items-center gap-3">
+              <View className="h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10">
+                <Dumbbell size={20} color="#F97316" />
+              </View>
+              <View>
+                <Text variant="subhead" weight="bold">Workout Burn</Text>
+                <Text variant="caption" color="muted">Active calories burned</Text>
+              </View>
+            </View>
+            <Text variant="title3" weight="bold" className="text-orange-500">
+              -{workoutBurn} kcal
+            </Text>
+          </View>
+        ) : null}
 
         <WaterCard
           consumedMl={waterTotal.data ?? 0}
@@ -112,10 +169,15 @@ export default function HomeScreen() {
         <MealsSection
           meals={meals ?? []}
           loading={mealsLoading}
-          emptyActionLabel="Scan a meal"
-          emptyActionOnPress={scanNow}
+          emptyActionLabel="Scan or search food"
+          emptyActionOnPress={() => setFoodSearchOpen(true)}
         />
       </View>
+
+      {/* Modals & Sheets */}
+      <FoodSearchModal visible={foodSearchOpen} onClose={() => setFoodSearchOpen(false)} />
+      <AICoachSheet visible={aiCoachOpen} onClose={() => setAiCoachOpen(false)} />
+      <WorkoutModal visible={workoutOpen} onClose={() => setWorkoutOpen(false)} />
 
       <BottomSheet visible={waterOpen} onClose={() => setWaterOpen(false)} title="Log water">
         <View className="flex-row flex-wrap gap-3">
