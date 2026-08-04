@@ -1,25 +1,33 @@
 {
   "expo": {
-    "name": "Myfitness",
-    "slug": "Myfitness",
+    "name": "NutraScan",
+    "slug": "nutrascan",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myfitness",
+    "scheme": "nutrascan",
     "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
     "ios": {
-      "icon": "./assets/expo.icon"
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nutrascan.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "NutraScan uses the camera to scan your meals and estimate nutrition instantly.",
+        "NSPhotoLibraryUsageDescription": "NutraScan accesses your photo library so you can log meals from saved photos."
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#0E7A4A",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "package": "com.nutrascan.app",
       "predictiveBackGestureEnabled": false
     },
     "web": {
+      "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
@@ -28,15 +36,26 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#0E7A4A",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 96
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "NutraScan uses the camera to scan your meals and estimate nutrition instantly."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "NutraScan accesses your photo library so you can log meals from saved photos."
         }
       ]
     ],
     "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
+      "typedRoutes": true
     }
   }
 }
