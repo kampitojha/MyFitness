@@ -53,6 +53,8 @@ export function useDeleteMeal() {
     mutationFn: (id: string) => mealService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.meals });
+      queryClient.invalidateQueries({ queryKey: ['history'] });
+      queryClient.invalidateQueries({ queryKey: ['totals'] });
     },
   });
 }

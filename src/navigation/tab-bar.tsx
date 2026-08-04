@@ -62,7 +62,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
       >
         {routes.map((route, index) => {
           const key = route.name as TabKey;
-          const isFocused = state.index === index;
+          const isFocused = state.routes[state.index]?.name === route.name;
           const isScan = key === 'scan';
           const Icon = TAB_ICONS[key];
 

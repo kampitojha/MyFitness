@@ -130,7 +130,14 @@ export default function ScanScreen() {
             <IconButton
               variant="surface"
               label="Close scanner"
-              onPress={() => reset()}
+              onPress={() => {
+                reset();
+                if (router.canGoBack()) {
+                  router.back();
+                } else {
+                  router.replace('/(tabs)');
+                }
+              }}
               icon={<Text className="text-ink text-lg leading-none dark:text-white">×</Text>}
             />
             <Text variant="headline" weight="semibold" className="text-white">

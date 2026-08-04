@@ -7,6 +7,7 @@ import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { Avatar } from '@/components/avatar';
 import { Button } from '@/components/ui/button';
+import { PressableScale } from '@/components/ui/pressable-scale';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { CaloriesCard } from '@/features/home/components/calories-card';
 import { WaterCard } from '@/features/home/components/water-card';
@@ -80,7 +81,9 @@ export default function HomeScreen() {
             {greeting()}
           </Text>
         </View>
-        <Avatar name={profile?.name} size={46} />
+        <PressableScale onPress={() => router.push('/profile')}>
+          <Avatar name={profile?.name} size={46} />
+        </PressableScale>
       </View>
 
       {!profile?.onboardingCompleted ? (
