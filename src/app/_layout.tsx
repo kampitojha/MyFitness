@@ -14,6 +14,8 @@ import { useSettingsStore } from '@/store/settings.store';
 import { useHasCompletedOnboarding } from '@/hooks/use-profile';
 import { Spinner } from '@/components/ui/spinner';
 
+process.env.EXPO_ROUTER_DISABLE_RN_NAVIGATION_CHECK = '1';
+
 SplashScreen.preventAutoHideAsync();
 
 function useResolvedColorScheme() {
@@ -35,10 +37,14 @@ function RootNavigator() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
+    <Stack
+      screenOptions={{ headerShown: false, animation: 'fade' }}
+      initialRouteName={onboarded ? '(tabs)' : '(onboarding)'}
+    >
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="(onboarding)" />
       <Stack.Screen name="(auth)" />
+      <Stack.Screen name="meal/[id]" />
     </Stack>
   );
 }
