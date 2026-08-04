@@ -2,8 +2,7 @@ import { useMemo, useState } from 'react';
 import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TrendingDown, Minus, TrendingUp, Ruler, Weight as WeightIcon, Sparkles } from 'lucide-react-native';
-
+import { TrendingDown, Minus, TrendingUp, Ruler, Weight as WeightIcon, Sparkles, ArrowRight } from 'lucide-react-native';
 
 import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
@@ -63,6 +62,7 @@ export default function OnboardingScreen() {
   }, [step, name, age, heightCm, weightKg, targetWeightKg]);
 
   const handleNext = async () => {
+    if (!canContinue) return;
     if (step < STEPS - 1) {
       setStep(step + 1);
       return;
@@ -97,20 +97,19 @@ export default function OnboardingScreen() {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       className="flex-1 bg-background dark:bg-background-dark"
-      style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 12 }}
+      style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16 }}
     >
-      <View className="px-6 pb-5">
+      <View className="px-6 pb-4">
         <Stepper step={step} total={STEPS} />
       </View>
 
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="px-6"
-        contentContainerStyle={{ paddingBottom: 16 }}
+        contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 32 }}
       >
-        <View key={step}>
-          <Text variant="title1" className="mb-2 text-ink dark:text-neutral-50">
+        <View key={step} className="pt-2">
+          <Text variant="title1" className="mb-1 text-ink dark:text-neutral-50 font-bold">
             {title}
           </Text>
           <Text variant="bodySmall" color="secondary" className="mb-6">
@@ -118,16 +117,18 @@ export default function OnboardingScreen() {
           </Text>
 
           {step === 0 && (
-            <View className="gap-3">
+            <View className="gap-4">
               <Input
                 label="What should we call you?"
                 value={name}
                 onChangeText={setName}
-                placeholder="Your first name"
+                placeholder="Enter your name"
                 autoFocus
                 autoCapitalize="words"
+                returnKeyType="next"
+                onSubmitEditing={() => { if (canContinue) handleNext(); }}
               />
-              <View className="mt-2 flex-row justify-center gap-1">
+              <View className="mt-1 flex-row justify-center gap-1">
                 <Text variant="bodySmall" color="secondary">
                   Already have an account?
                 </Text>
@@ -159,7 +160,7 @@ export default function OnboardingScreen() {
           )}
 
           {step === 2 && (
-            <View className="gap-3">
+            <View className="gap-4">
               <View className="flex-row gap-2">
                 {GENDER_OPTIONS.map((g) => (
                   <SelectableOption
@@ -176,12 +177,14 @@ export default function OnboardingScreen() {
                 value={age}
                 onChangeText={setAge}
                 placeholder="e.g. 28"
+                returnKeyType="next"
+                onSubmitEditing={() => { if (canContinue) handleNext(); }}
               />
             </View>
           )}
 
           {step === 3 && (
-            <View className="gap-3">
+            <View className="gap-4">
               <Input
                 label="Height (cm)"
                 leftIcon={<Ruler size={18} color={colors.textMuted} />}
@@ -205,6 +208,8 @@ export default function OnboardingScreen() {
                 value={targetWeightKg}
                 onChangeText={setTargetWeightKg}
                 placeholder="e.g. 65"
+                returnKeyType="done"
+                onSubmitEditing={() => { if (canContinue) handleNext(); }}
               />
             </View>
           )}
@@ -223,7 +228,7 @@ export default function OnboardingScreen() {
           )}
 
           {step === STEPS - 1 && (
-            <View className="gap-3">
+            <View className="gap-4">
               <View className="rounded-[24px] bg-primary-soft p-5 dark:bg-emerald-900">
                 <View className="flex-row items-center gap-2">
                   <Sparkles size={18} color={colors.primary} />
@@ -239,23 +244,25 @@ export default function OnboardingScreen() {
                 </View>
               </View>
               <Text variant="caption" color="muted" className="text-center">
-                You can adjust these anytime in Settings.
+                You can adjust these goals anytime in Settings.
               </Text>
             </View>
           )}
+
+          {/* Action Button Right Below Form */}
+          <View className="mt-8">
+            <Button
+              label={step === STEPS - 1 ? 'Finish setup' : 'Continue'}
+              onPress={handleNext}
+              disabled={!canContinue}
+              loading={step === STEPS - 1 && complete.isPending}
+              fullWidth
+              size="lg"
+              icon={step < STEPS - 1 ? <ArrowRight size={18} color="#FFFFFF" /> : undefined}
+            />
+          </View>
         </View>
       </ScrollView>
-
-      <View className="px-6">
-        <Button
-          label={step === STEPS - 1 ? 'Finish' : 'Continue'}
-          onPress={handleNext}
-          disabled={!canContinue}
-          loading={step === STEPS - 1 && complete.isPending}
-          fullWidth
-          size="lg"
-        />
-      </View>
     </KeyboardAvoidingView>
   );
 }
