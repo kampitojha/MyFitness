@@ -36,14 +36,9 @@ function RootNavigator() {
 
   return (
     <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
-      <Stack.Protected guard={!onboarded}>
-        <Stack.Screen name="(onboarding)" />
-        <Stack.Screen name="(auth)" />
-      </Stack.Protected>
-      <Stack.Protected guard={!!onboarded}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="meal/[id]" />
-      </Stack.Protected>
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="(onboarding)" />
+      <Stack.Screen name="(auth)" />
     </Stack>
   );
 }

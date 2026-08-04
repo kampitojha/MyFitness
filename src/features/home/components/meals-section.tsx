@@ -64,7 +64,7 @@ export function MealsSection({ meals, loading, emptyActionLabel, emptyActionOnPr
               <MealRow
                 key={meal.id}
                 meal={meal}
-                onPress={() => router.push(`/meal/${meal.id}`)}
+                onPress={() => router.push({ pathname: '/meal/[id]', params: { id: meal.id } })}
               />
             ))}
           </View>

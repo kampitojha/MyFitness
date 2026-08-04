@@ -12,6 +12,7 @@ export interface MealRepository {
   delete(id: string): Promise<void>;
   byDate(date: string): Promise<Meal[]>;
   latest(limit: number): Promise<Meal[]>;
+  getById(id: string): Promise<Meal | null>;
   totalsForDate(date: string): Promise<Macros>;
 }
 
@@ -65,6 +66,11 @@ export const mealService: MealRepository = {
   async latest(limit = 10) {
     const meals = (await mealService.list()) ?? [];
     return meals.slice(0, limit);
+  },
+
+  async getById(id: string) {
+    const meals = await mealService.list();
+    return meals.find((m) => m.id === id) ?? null;
   },
 
   async totalsForDate(date) {

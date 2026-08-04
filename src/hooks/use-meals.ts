@@ -11,6 +11,14 @@ export function useMeals() {
   });
 }
 
+export function useMeal(id: string) {
+  return useQuery({
+    queryKey: ['meal', id],
+    queryFn: () => mealService.getById(id),
+    enabled: Boolean(id),
+  });
+}
+
 export function useMealsForDate(date: string) {
   return useQuery({
     queryKey: QUERY_KEYS.history(date),

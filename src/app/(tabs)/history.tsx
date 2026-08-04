@@ -134,7 +134,7 @@ export default function HistoryScreen() {
               <View className="gap-4">
                 {group.items.map((meal, index) => (
                   <View key={meal.id}>
-                    <MealRow meal={meal} onPress={() => router.push(`/meal/${meal.id}`)} />
+                    <MealRow meal={meal} onPress={() => router.push({ pathname: '/meal/[id]', params: { id: meal.id } })} />
                     {index < group.items.length - 1 ? <Divider className="my-4" /> : null}
                   </View>
                 ))}
