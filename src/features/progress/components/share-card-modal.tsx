@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { View } from 'react-native';
-import { Share2, Trophy, Flame, Beef, Droplets, CheckCircle } from 'lucide-react-native';
+import * as Clipboard from 'expo-clipboard';
+import { Share2, Trophy, Flame, Beef, Droplets } from 'lucide-react-native';
 
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { useProfile } from '@/hooks/use-profile';
 import { useTodayMacros } from '@/hooks/use-meals';
 import { useWaterTotal } from '@/hooks/use-tracker';
@@ -23,6 +24,7 @@ export function ShareCardModal({ visible, onClose }: ShareCardModalProps) {
   const { macros } = useTodayMacros();
   const waterTotal = useWaterTotal(today);
   const { data: burn } = useWorkoutBurnForDate(today);
+  const [copied, setCopied] = useState(false);
 
   return (
     <BottomSheet visible={visible} onClose={onClose} title="Share daily progress story" snapTo={0.8}>
@@ -34,7 +36,7 @@ export function ShareCardModal({ visible, onClose }: ShareCardModalProps) {
               NutraScan Fitness
             </Text>
             <Text variant="title2" weight="bold" className="text-white">
-              {profile?.name || 'Athlete'}'s Daily Summary
+              {profile?.name || 'Athlete'}{'\''}s Daily Summary
             </Text>
           </View>
           <View className="h-10 w-10 items-center justify-center rounded-full bg-white/20">
@@ -88,8 +90,21 @@ export function ShareCardModal({ visible, onClose }: ShareCardModalProps) {
       </View>
 
       <Button
-        label="Copy story summary"
-        onPress={onClose}
+        label={copied ? '✓ Copied!' : 'Copy story summary'}
+        onPress={async () => {
+          const text = [
+            `🏋️ ${profile?.name || 'Athlete'}'s Daily Summary — ${formatLong(today)}`,
+            `🔥 Calories: ${formatNumber(macros.calories)} kcal consumed`,
+            `🥩 Protein: ${formatNumber(macros.protein)}g / ${formatNumber(profile?.dailyGoals.protein ?? 125)}g`,
+            `💪 Workout burned: -${formatNumber(burn ?? 0)} kcal`,
+            `💧 Hydration: ${formatNumber(waterTotal.data ?? 0)} ml`,
+            '',
+            'Tracked with MyFitness · NutraScan AI',
+          ].join('\n');
+          await Clipboard.setStringAsync(text);
+          setCopied(true);
+          setTimeout(() => { setCopied(false); onClose(); }, 1500);
+        }}
         size="lg"
         fullWidth
         icon={<Share2 size={18} color="#FFFFFF" />}

@@ -24,7 +24,12 @@ export const mealService: MealRepository = {
   async save(draft, at = toISODate()) {
     const meals = (await mealService.list()) ?? [];
     const id = createId('meal');
-    const ISO = new Date().toISOString();
+    // Use local ISO date for createdAt so date-based filtering (slice 0,10) works
+    // correctly regardless of user timezone (avoids UTC-vs-local mismatch)
+    const now = new Date();
+    const localDate = toISODate(now);
+    const ISO = now.toISOString();
+    const createdAt = at === toISODate() ? localDate : at;
     const meal: Meal = {
       id,
       name: draft.name ?? draft.items[0]?.name ?? 'Meal',
@@ -46,7 +51,7 @@ export const mealService: MealRepository = {
       })),
       macros: sumMacros(draft.items),
       imageUri: draft.imageUri ?? draft.items[0]?.imageUri,
-      createdAt: at,
+      createdAt,
     };
     meals.unshift(meal);
     await writeJSON(STORAGE_KEYS.meals, meals);

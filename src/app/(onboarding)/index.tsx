@@ -7,6 +7,7 @@ import { TrendingDown, Minus, TrendingUp, Ruler, Weight as WeightIcon, Sparkles,
 import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PressableScale } from '@/components/ui/pressable-scale';
 import { Stepper } from '@/features/onboarding/components/stepper';
 import { SelectableOption } from '@/features/onboarding/components/selectable-option';
 import { useCompleteOnboarding } from '@/hooks/use-profile';
@@ -14,7 +15,7 @@ import type { ActivityLevel, Gender, GoalType } from '@/types/user';
 import { ACTIVITY_LEVELS, defaultDailyGoals } from '@/types/user';
 import { useTheme } from '@/hooks/use-theme';
 
-const STEPS = 5;
+const STEPS = 6;
 
 const GOAL_OPTIONS: { value: GoalType; label: string; description: string; icon: React.ReactNode }[] = [
   { value: 'lose', label: 'Lose weight', description: 'Create a healthy calorie deficit', icon: <TrendingDown size={20} color="#0E7A4A" /> },
@@ -56,7 +57,8 @@ export default function OnboardingScreen() {
       case 1: return true;
       case 2: return num(age) && Number(age) >= 13 && Number(age) <= 100;
       case 3: return num(heightCm) && num(weightKg) && num(targetWeightKg);
-      case 4: return true;
+      case 4: return true; // activity level
+      case 5: return true; // plan summary / finish
       default: return true;
     }
   }, [step, name, age, heightCm, weightKg, targetWeightKg]);
@@ -89,6 +91,7 @@ export default function OnboardingScreen() {
       case 2: return 'About you';
       case 3: return 'Your body';
       case 4: return 'Your activity level';
+      case 5: return 'Your daily plan is ready';
       default: return '';
     }
   }, [step]);
@@ -99,8 +102,15 @@ export default function OnboardingScreen() {
       className="flex-1 bg-background dark:bg-background-dark"
       style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16 }}
     >
-      <View className="px-6 pb-4">
-        <Stepper step={step} total={STEPS} />
+      <View className="px-6 pb-4 flex-row items-center gap-3">
+        {step > 0 ? (
+          <PressableScale onPress={() => setStep(step - 1)} className="h-8 w-8 items-center justify-center rounded-full bg-surface dark:bg-neutral-900">
+            <Text variant="headline" className="text-ink dark:text-neutral-50">‹</Text>
+          </PressableScale>
+        ) : <View className="w-8" />}
+        <View className="flex-1">
+          <Stepper step={step} total={STEPS} />
+        </View>
       </View>
 
       <ScrollView
@@ -227,13 +237,13 @@ export default function OnboardingScreen() {
             </View>
           )}
 
-          {step === STEPS - 1 && (
+          {step === 5 && (
             <View className="gap-4">
               <View className="rounded-[24px] bg-primary-soft p-5 dark:bg-emerald-900">
                 <View className="flex-row items-center gap-2">
                   <Sparkles size={18} color={colors.primary} />
                   <Text variant="subhead" weight="semibold" className="text-primary-softText dark:text-emerald-200">
-                    Your daily plan
+                    Your personalized daily goals
                   </Text>
                 </View>
                 <View className="mt-4 flex-row justify-between">
@@ -244,7 +254,8 @@ export default function OnboardingScreen() {
                 </View>
               </View>
               <Text variant="caption" color="muted" className="text-center">
-                You can adjust these goals anytime in Settings.
+                Based on your {activityLevel} activity level and goal to {goalType === 'lose' ? 'lose weight' : goalType === 'gain' ? 'build muscle' : 'maintain weight'}.
+                You can always change these in Settings.
               </Text>
             </View>
           )}

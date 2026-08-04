@@ -50,11 +50,22 @@ export function useSaveMeal() {
 export function useDeleteMeal() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => mealService.delete(id),
-    onSuccess: () => {
+    mutationFn: async (id: string) => {
+      // Fetch the meal before deleting so we know which date to invalidate
+      const meal = await mealService.getById(id);
+      await mealService.delete(id);
+      return meal?.createdAt?.slice(0, 10) ?? null;
+    },
+    onSuccess: (date) => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.meals });
-      queryClient.invalidateQueries({ queryKey: ['history'] });
-      queryClient.invalidateQueries({ queryKey: ['totals'] });
+      if (date) {
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.history(date) });
+        queryClient.invalidateQueries({ queryKey: ['totals', date] });
+      } else {
+        // Fallback: invalidate all history and totals
+        queryClient.invalidateQueries({ queryKey: ['history'] });
+        queryClient.invalidateQueries({ queryKey: ['totals'] });
+      }
     },
   });
 }
