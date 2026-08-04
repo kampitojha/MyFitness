@@ -29,7 +29,7 @@ export function Screen({
   );
 
   return (
-    <SafeAreaView edges={edges} className={cn('flex-1 bg-background dark:bg-background-dark', className)}>
+    <SafeAreaView edges={edges} style={[{ flex: 1 }, style]} className={cn('bg-background dark:bg-background-dark', className)}>
       <StatusBar style="auto" />
       {scroll ? (
         <ScrollView

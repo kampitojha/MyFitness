@@ -10,8 +10,6 @@ import { Stack } from 'expo-router';
 
 import { queryClient } from '@/lib/query-client';
 import { useSettingsStore } from '@/store/settings.store';
-import { useHasCompletedOnboarding } from '@/hooks/use-profile';
-import { Spinner } from '@/components/ui/spinner';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,21 +21,9 @@ function useResolvedColorScheme() {
 }
 
 function RootNavigator() {
-  const { data: onboarded, isLoading } = useHasCompletedOnboarding();
-
-  if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <Spinner size="large" />
-      </View>
-    );
-  }
-
   return (
-    <Stack
-      screenOptions={{ headerShown: false, animation: 'fade' }}
-      initialRouteName={onboarded ? '(tabs)' : '(onboarding)'}
-    >
+    <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
+      <Stack.Screen name="index" />
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="(onboarding)" />
       <Stack.Screen name="(auth)" />
@@ -71,9 +57,9 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
+      <SafeAreaProvider style={{ flex: 1 }}>
         <QueryClientProvider client={queryClient}>
-          <View className="flex-1">
+          <View style={{ flex: 1 }} className="bg-background dark:bg-background-dark">
             <RootNavigator />
           </View>
         </QueryClientProvider>
