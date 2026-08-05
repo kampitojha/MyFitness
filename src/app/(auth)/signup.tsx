@@ -1,7 +1,7 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Mail, Lock, UserRound, ArrowLeft } from 'lucide-react-native';
@@ -9,7 +9,8 @@ import { Mail, Lock, UserRound, ArrowLeft } from 'lucide-react-native';
 import { Text } from '@/components/ui/text';
 import { Input } from '@/components/ui/input';
 import { Button, IconButton } from '@/components/ui/button';
-import { userService } from '@/services/user.service';
+import { authService } from '@/services/auth.service';
+import { useAuthStore } from '@/store/auth.store';
 import { useTheme } from '@/hooks/use-theme';
 
 const schema = z
@@ -36,9 +37,18 @@ export default function SignupScreen() {
   });
 
   const onSubmit = async (values: FormValues) => {
-    await userService.upsert({ name: values.name, email: values.email, onboardingCompleted: true });
-    await userService.setOnboarded(true);
-    router.replace('/(tabs)');
+    try {
+      const user = await authService.signUp({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      });
+      useAuthStore.getState().setUser(user);
+      // New accounts always complete the onboarding wizard first.
+      router.replace('/(onboarding)');
+    } catch (err) {
+      Alert.alert('Sign up failed', err instanceof Error ? err.message : 'Please try again.');
+    }
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { Dumbbell, Flame, Check } from 'lucide-react-native';
+import { Flame, Check } from 'lucide-react-native';
 
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { Text } from '@/components/ui/text';

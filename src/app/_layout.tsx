@@ -10,6 +10,7 @@ import { Stack } from 'expo-router';
 
 import { queryClient } from '@/lib/query-client';
 import { useSettingsStore } from '@/store/settings.store';
+import { useAuthStore } from '@/store/auth.store';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,6 +37,20 @@ function RootNavigator() {
 export default function RootLayout() {
   const scheme = useResolvedColorScheme();
   const themePref = useSettingsStore((s) => s.theme);
+  const hydrateAuth = useAuthStore((s) => s.hydrate);
+
+  useEffect(() => {
+    let active = true;
+    let unsub: (() => void) | undefined;
+    hydrateAuth().then((u) => {
+      if (!active) return;
+      unsub = u;
+    });
+    return () => {
+      active = false;
+      unsub?.();
+    };
+  }, [hydrateAuth]);
 
   useEffect(() => {
     if (Platform.OS === 'web' && typeof document !== 'undefined') {

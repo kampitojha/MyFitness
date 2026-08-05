@@ -18,7 +18,7 @@ import { useScanStore } from '@/store/scan.store';
 import { useSettingsStore } from '@/store/settings.store';
 import { analyzeFoodImage } from '@/services/scan.service';
 import { useSaveMeal } from '@/hooks/use-meals';
-import { MEAL_TYPES, MEAL_TYPE_LABELS, sumMacros } from '@/types/meals';
+import { MEAL_TYPES, MEAL_TYPE_LABELS, sumScaledMacros } from '@/types/meals';
 import { useTheme } from '@/hooks/use-theme';
 import { formatNumber } from '@/utils/number';
 import { cn } from '@/utils/cn';
@@ -102,7 +102,7 @@ export default function ScanScreen() {
     }
   }, [detectedFoods, imageUri, selectedMealType, saveMeal, reset, router, setPhase]);
 
-  const total = sumMacros(detectedFoods);
+  const total = sumScaledMacros(detectedFoods);
 
   return (
     <View className="flex-1 bg-background dark:bg-background-dark">

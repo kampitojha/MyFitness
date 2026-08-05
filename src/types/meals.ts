@@ -47,6 +47,23 @@ export function sumMacros(items: { macros: Macros }[]): Macros {
   );
 }
 
+/** Sum item macros after scaling each by its quantity. Use when storing a meal
+ *  so that per-serving macros (e.g. from scan) are logged at the right amount. */
+export function sumScaledMacros(items: { macros: Macros; quantity?: number }[]): Macros {
+  return items.reduce<Macros>(
+    (acc, item) => {
+      const scaled = scaleMacros(item.macros, item.quantity ?? 1);
+      return {
+        calories: acc.calories + scaled.calories,
+        protein: acc.protein + scaled.protein,
+        carbs: acc.carbs + scaled.carbs,
+        fat: acc.fat + scaled.fat,
+      };
+    },
+    { calories: 0, protein: 0, carbs: 0, fat: 0 },
+  );
+}
+
 export function scaleMacros(macros: Macros, quantity: number): Macros {
   return {
     calories: Math.round(macros.calories * quantity),

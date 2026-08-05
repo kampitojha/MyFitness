@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { View, Image, Pressable } from 'react-native';
+import { View, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SearchIcon, Grid, ListFilter, Calendar, ChevronLeft, ChevronRight, Camera } from 'lucide-react-native';
 
@@ -7,7 +7,7 @@ import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { Input } from '@/components/ui/input';
 import { Chip } from '@/components/ui/chip';
-import { Button, IconButton } from '@/components/ui/button';
+import { IconButton } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { ErrorState } from '@/components/ui/error-state';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,7 +17,7 @@ import { MealRow } from '@/features/meals/components/meal-row';
 import { useMeals } from '@/hooks/use-meals';
 import { useTheme } from '@/hooks/use-theme';
 import { MEAL_TYPES, type MealType } from '@/types/meals';
-import { relativeDayLabel, toISODate, addDays, formatLong } from '@/utils/date';
+import { relativeDayLabel, toISODate, addDays } from '@/utils/date';
 import { formatNumber } from '@/utils/number';
 
 type Filter = 'all' | MealType;

@@ -18,6 +18,8 @@ module.exports = {
           800: '#0A4E31',
           900: '#083F28',
           950: '#042519',
+          soft: '#ECFBF3',
+          softText: '#0C623C',
         },
         accent: {
           DEFAULT: '#DCFCE7',
@@ -29,15 +31,20 @@ module.exports = {
         surface: {
           DEFAULT: '#FFFFFF',
           dark: '#14181A',
+          alt: '#EFF1F3',
         },
         ink: {
           DEFAULT: '#101311',
           secondary: '#5E6570',
           muted: '#8A9099',
         },
+        border: '#E2E5E9',
         success: '#16A34A',
         warning: '#F59E0B',
-        danger: '#DC2626',
+        danger: {
+          DEFAULT: '#DC2626',
+          soft: '#FEE2E2',
+        },
         info: '#0EA5E9',
       },
       fontFamily: {

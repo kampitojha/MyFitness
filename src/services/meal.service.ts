@@ -1,9 +1,9 @@
 import { STORAGE_KEYS } from '@/constants';
 import { readJSON, writeJSON } from '@/lib/storage';
 import type { Meal, MealDraft } from '@/types/meals';
-import { sumMacros } from '@/types/meals';
+import { sumScaledMacros } from '@/types/meals';
 import { createId } from '@/utils/id';
-import { toISODate } from '@/utils/date';
+import { toISODate, toLocalDateTime } from '@/utils/date';
 import type { Macros } from '@/types/nutrition';
 
 export interface MealRepository {
@@ -27,9 +27,8 @@ export const mealService: MealRepository = {
     // Use local ISO date for createdAt so date-based filtering (slice 0,10) works
     // correctly regardless of user timezone (avoids UTC-vs-local mismatch)
     const now = new Date();
-    const localDate = toISODate(now);
     const ISO = now.toISOString();
-    const createdAt = at === toISODate() ? localDate : at;
+    const createdAt = at === toISODate() ? toLocalDateTime(now) : at;
     const meal: Meal = {
       id,
       name: draft.name ?? draft.items[0]?.name ?? 'Meal',
@@ -49,7 +48,7 @@ export const mealService: MealRepository = {
         isFavorite: item.isFavorite,
         createdAt: item.createdAt ?? ISO,
       })),
-      macros: sumMacros(draft.items),
+      macros: sumScaledMacros(draft.items),
       imageUri: draft.imageUri ?? draft.items[0]?.imageUri,
       createdAt,
     };

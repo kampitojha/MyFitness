@@ -1,16 +1,14 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { View, ScrollView } from 'react-native';
-import { Bot, Send, Sparkles, Utensils, Zap, CheckCircle2 } from 'lucide-react-native';
+import { Send, Sparkles } from 'lucide-react-native';
 
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { Text } from '@/components/ui/text';
 import { Input } from '@/components/ui/input';
-import { Button, IconButton } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { IconButton } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { useProfile } from '@/hooks/use-profile';
 import { useTodayMacros } from '@/hooks/use-meals';
-import { useTheme } from '@/hooks/use-theme';
 
 export interface AICoachSheetProps {
   visible: boolean;
@@ -31,7 +29,6 @@ const QUICK_PROMPTS = [
 ];
 
 export function AICoachSheet({ visible, onClose }: AICoachSheetProps) {
-  const { colors } = useTheme();
   const { data: profile } = useProfile();
   const { macros } = useTodayMacros();
 
@@ -48,12 +45,17 @@ export function AICoachSheet({ visible, onClose }: AICoachSheetProps) {
   ]);
   const [inputText, setInputText] = useState('');
   const [thinking, setThinking] = useState(false);
+  const msgCounter = useRef(0);
+  const nextMsgId = () => {
+    msgCounter.current += 1;
+    return `msg-${msgCounter.current}`;
+  };
 
   const handleSend = (queryText?: string) => {
     const textToSend = queryText || inputText;
     if (!textToSend.trim()) return;
 
-    const userMsg: Message = { id: Date.now().toString(), sender: 'user', text: textToSend };
+    const userMsg: Message = { id: nextMsgId(), sender: 'user', text: textToSend };
     setMessages((prev) => [...prev, userMsg]);
     setInputText('');
     setThinking(true);
@@ -74,7 +76,7 @@ export function AICoachSheet({ visible, onClose }: AICoachSheetProps) {
         replyText = `Based on your remaining ${remCalories} kcal and ${remProtein}g protein target, focus on lean protein sources and complex carbs with fiber. Let me know if you want a specific recipe!`;
       }
 
-      setMessages((prev) => [...prev, { id: (Date.now() + 1).toString(), sender: 'ai', text: replyText }]);
+      setMessages((prev) => [...prev, { id: nextMsgId(), sender: 'ai', text: replyText }]);
       setThinking(false);
     }, 800);
   };

@@ -10,7 +10,8 @@ import { Input } from '@/components/ui/input';
 import { PressableScale } from '@/components/ui/pressable-scale';
 import { Stepper } from '@/features/onboarding/components/stepper';
 import { SelectableOption } from '@/features/onboarding/components/selectable-option';
-import { useCompleteOnboarding } from '@/hooks/use-profile';
+import { useCompleteOnboarding, useProfile } from '@/hooks/use-profile';
+import { useAuthStore } from '@/store/auth.store';
 import type { ActivityLevel, Gender, GoalType } from '@/types/user';
 import { ACTIVITY_LEVELS, defaultDailyGoals } from '@/types/user';
 import { useTheme } from '@/hooks/use-theme';
@@ -34,9 +35,13 @@ export default function OnboardingScreen() {
   const router = useRouter();
   const complete = useCompleteOnboarding();
   const { colors } = useTheme();
+  const { data: profile } = useProfile();
+  const authUser = useAuthStore((s) => s.user);
+
+  const initialName = authUser?.name || profile?.name || '';
 
   const [step, setStep] = useState(0);
-  const [name, setName] = useState('');
+  const [name, setName] = useState(initialName);
   const [goalType, setGoalType] = useState<GoalType>('lose');
   const [gender, setGender] = useState<Gender>('other');
   const [age, setAge] = useState('28');
@@ -47,8 +52,13 @@ export default function OnboardingScreen() {
 
   const activity = ACTIVITY_LEVELS.find((a) => a.value === activityLevel);
   const goals = useMemo(
-    () => defaultDailyGoals(activity?.factor ?? 1.55, goalType),
-    [activity, goalType],
+    () => defaultDailyGoals(activity?.factor ?? 1.55, goalType, {
+      gender,
+      age: Number(age) || 28,
+      heightCm: Number(heightCm) || 172,
+      weightKg: Number(weightKg) || 70,
+    }),
+    [activity, goalType, gender, age, heightCm, weightKg],
   );
   const canContinue = useMemo(() => {
     const num = (v: string) => Number(v) > 0;
@@ -133,24 +143,11 @@ export default function OnboardingScreen() {
                 value={name}
                 onChangeText={setName}
                 placeholder="Enter your name"
-                autoFocus
+                autoFocus={!initialName}
                 autoCapitalize="words"
                 returnKeyType="next"
                 onSubmitEditing={() => { if (canContinue) handleNext(); }}
               />
-              <View className="mt-1 flex-row justify-center gap-1">
-                <Text variant="bodySmall" color="secondary">
-                  Already have an account?
-                </Text>
-                <Text
-                  variant="bodySmall"
-                  weight="semibold"
-                  color="primary"
-                  onPress={() => router.push('/(auth)/login')}
-                >
-                  Log in
-                </Text>
-              </View>
             </View>
           )}
 
@@ -239,7 +236,7 @@ export default function OnboardingScreen() {
 
           {step === 5 && (
             <View className="gap-4">
-              <View className="rounded-[24px] bg-primary-soft p-5 dark:bg-emerald-900">
+              <View className="rounded-3xl bg-primary-soft p-5 dark:bg-emerald-900">
                 <View className="flex-row items-center gap-2">
                   <Sparkles size={18} color={colors.primary} />
                   <Text variant="subhead" weight="semibold" className="text-primary-softText dark:text-emerald-200">

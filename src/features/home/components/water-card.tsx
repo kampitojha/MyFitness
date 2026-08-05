@@ -15,15 +15,15 @@ export interface WaterCardProps {
   disabled?: boolean;
 }
 
-const GLASSES = Array.from({ length: 8 }, (_, i) => (i + 1) * 250);
-
 export function WaterCard({ consumedMl, targetMl = WATER_TARGET_ML, onAdd, stepMl = 250, disabled }: WaterCardProps) {
   const { colors } = useTheme();
   const pct = Math.min(100, (consumedMl / targetMl) * 100);
   const filled = Math.floor(consumedMl / stepMl);
+  const glassCount = Math.max(4, Math.min(12, Math.round(targetMl / stepMl)));
+  const glasses = Array.from({ length: glassCount }, (_, i) => (i + 1) * stepMl);
 
   return (
-    <View className="rounded-[24px] bg-surface p-5 shadow-sm dark:bg-neutral-900">
+    <View className="rounded-3xl bg-surface p-5 shadow-sm dark:bg-neutral-900">
       <View className="mb-4 flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
           <View className="h-9 w-9 items-center justify-center rounded-full bg-sky-100 dark:bg-sky-950">
@@ -53,8 +53,7 @@ export function WaterCard({ consumedMl, targetMl = WATER_TARGET_ML, onAdd, stepM
       </View>
 
       <View className="mb-3 flex-row justify-between">
-        {GLASSES.map((glass) => {
-          const index = GLASSES.indexOf(glass);
+        {glasses.map((glass, index) => {
           const isFilled = index < filled;
           return (
             <View

@@ -18,8 +18,10 @@ import { SettingsRow } from '@/features/profile/components/settings-row';
 import { useProfile, useUpsertProfile } from '@/hooks/use-profile';
 import { useWeightForDate, useUpsertWeight } from '@/hooks/use-tracker';
 import { useSettingsStore, type AppThemePreference } from '@/store/settings.store';
-import { userService } from '@/services/user.service';
+import { useAuthStore } from '@/store/auth.store';
+import { authService } from '@/services/auth.service';
 import { formatNumber } from '@/utils/number';
+import { toISODate } from '@/utils/date';
 
 const THEME_OPTIONS: { value: AppThemePreference; label: string }[] = [
   { value: 'system', label: 'System' },
@@ -32,7 +34,7 @@ export default function ProfileScreen() {
   const { data: profile } = useProfile();
   const upsert = useUpsertProfile();
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = toISODate();
   const { data: todayWeight } = useWeightForDate(today);
   const upsertWeight = useUpsertWeight();
 
@@ -54,8 +56,9 @@ export default function ProfileScreen() {
   };
 
   const signOut = async () => {
-    await userService.setOnboarded(false);
-    router.replace('/(onboarding)');
+    await authService.signOut();
+    useAuthStore.getState().setUser(null);
+    router.replace('/');
   };
 
   return (
@@ -67,7 +70,7 @@ export default function ProfileScreen() {
       </View>
 
       {/* Profile card */}
-      <View className="mb-5 flex-row items-center gap-4 rounded-[24px] bg-surface p-5 shadow-sm dark:bg-neutral-900">
+      <View className="mb-5 flex-row items-center gap-4 rounded-3xl bg-surface p-5 shadow-sm dark:bg-neutral-900">
         <Avatar name={profile?.name} uri={profile?.photoUri} size={64} />
         <View className="flex-1 gap-0.5">
           <Text variant="title3" weight="bold">
@@ -196,7 +199,7 @@ export default function ProfileScreen() {
 
 function StatBlock({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
   return (
-    <View className="flex-1 items-center rounded-[20px] bg-surface py-4 shadow-sm dark:bg-neutral-900">
+    <View className="flex-1 items-center rounded-2xl bg-surface py-4 shadow-sm dark:bg-neutral-900">
       {icon}
       <Text variant="subhead" weight="bold" className="mt-1.5 text-ink dark:text-neutral-50">
         {value}

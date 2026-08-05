@@ -58,7 +58,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
       style={{ paddingBottom: insets.bottom + (Platform.OS === 'android' ? 8 : 0) }}
     >
       <View
-        className="mx-5 flex-row items-center justify-between rounded-[26px] border border-border/60 bg-surface/95 px-3 py-2 shadow-lg backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/95"
+        className="mx-5 flex-row items-center justify-between rounded-[26px] border border-border/60 bg-surface/95 px-2 py-2 shadow-lg backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/95"
       >
         {routes.map((route, index) => {
           const key = route.name as TabKey;
@@ -68,7 +68,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
 
           if (isScan) {
             return (
-              <View key={route.key} className="items-center">
+              <View key={route.key} className="flex-1 items-center">
                 <PressableScale
                   accessibilityRole="tab"
                   accessibilityState={{ selected: isFocused }}
@@ -107,7 +107,8 @@ export function TabBar({ state, navigation }: TabBarProps) {
                   navigation.navigate(route.name);
                 }
               }}
-              className="h-14 w-14 items-center justify-center rounded-2xl"
+              className="flex-1 items-center justify-center"
+              style={{ height: 56 }}
             >
               <Icon
                 size={isFocused ? 23 : 22}

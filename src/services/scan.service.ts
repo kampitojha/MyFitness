@@ -24,13 +24,13 @@ function hashString(str: string): number {
 
 interface MealCombo {
   name: string;
-  items: Array<{
+  items: {
     name: string;
     servingSize: string;
     macros: { calories: number; protein: number; carbs: number; fat: number };
     healthScore: number;
     bbox: { x: number; y: number; width: number; height: number };
-  }>;
+  }[];
 }
 
 const AI_MEAL_DATABASE: MealCombo[] = [

@@ -69,8 +69,13 @@ export default function EditProfileScreen() {
   // Suggested goals (recalculated live)
   const suggestedGoals = useMemo(() => {
     const activity = ACTIVITY_LEVELS.find((a) => a.value === activityLevel);
-    return defaultDailyGoals(activity?.factor ?? 1.55, goalType);
-  }, [activityLevel, goalType]);
+    return defaultDailyGoals(activity?.factor ?? 1.55, goalType, {
+      gender,
+      age: Number(age) || 28,
+      heightCm: Number(heightCm) || 172,
+      weightKg: Number(weightKg) || 70,
+    });
+  }, [activityLevel, goalType, gender, age, heightCm, weightKg]);
 
   const isDirty = useMemo(() => {
     if (!profile) return true;

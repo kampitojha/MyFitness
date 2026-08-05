@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { workoutService, type WorkoutLog } from '@/services/workout.service';
+import { workoutService } from '@/services/workout.service';
 
 export function useWorkoutsForDate(date: string) {
   return useQuery({

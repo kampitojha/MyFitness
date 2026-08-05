@@ -1,7 +1,4 @@
-import { STORAGE_KEYS } from '@/constants';
 import { readJSON, writeJSON } from '@/lib/storage';
-import type { FoodItem } from '@/types/food';
-import type { MealType } from '@/types/meals';
 import { createId } from '@/utils/id';
 
 export interface PresetFood {

@@ -24,7 +24,7 @@ export interface BottomSheetProps {
 
 export function BottomSheet({ visible, onClose, title, children, snapTo = 0.6, dismissable = true }: BottomSheetProps) {
   const insets = useSafeAreaInsets();
-  const { colors, isDark } = useTheme();
+  const { isDark } = useTheme();
   const translateY = useSharedValue(SCREEN_HEIGHT);
   const maxHeight = Math.min(SCREEN_HEIGHT - insets.top - 24, Math.round(SCREEN_HEIGHT * Math.max(snapTo, 0.7)));
 
@@ -47,7 +47,6 @@ export function BottomSheet({ visible, onClose, title, children, snapTo = 0.6, d
         translateY.value = withSpring(SCREEN_HEIGHT, springs.snappy);
         setTimeout(onClose, 120);
       } else {
-        // eslint-disable-next-line react-hooks/immutability
         translateY.value = withSpring(0, springs.snappy);
       }
     });

@@ -25,7 +25,6 @@ import { useProfile } from '@/hooks/use-profile';
 import { useDailyTotals, useMealsForDate } from '@/hooks/use-meals';
 import { useWaterTotal, useAddWater } from '@/hooks/use-tracker';
 import { useWorkoutBurnForDate } from '@/hooks/use-workouts';
-import { useTheme } from '@/hooks/use-theme';
 
 import { toISODate, formatLong } from '@/utils/date';
 import { formatNumber } from '@/utils/number';
@@ -41,7 +40,6 @@ function greeting(date = new Date()): string {
 export default function HomeScreen() {
   const router = useRouter();
   const today = toISODate();
-  const { colors } = useTheme();
 
   const { data: profile } = useProfile();
   const { data: totals } = useDailyTotals(today);
@@ -82,8 +80,6 @@ export default function HomeScreen() {
     }
     return { title: 'On a roll', message: `You’ve logged ${meals?.length ?? 0} meals so far today. Keep building the habit.` };
   }, [profile, goals, macros, meals]);
-
-  const scanNow = useCallback(() => router.push('/scan'), [router]);
 
   return (
     <Screen edges={['top']} contentContainerStyle={{ paddingBottom: 140 }}>
@@ -143,35 +139,18 @@ export default function HomeScreen() {
       </View>
 
       <View className="gap-4">
-        <FitnessWidgets
-          onOpenSupplements={() => setSupplementOpen(true)}
-          onOpenSleep={() => setSleepOpen(true)}
-        />
-
-        <CaloriesCard consumed={macros} goals={goals} />
-
-        {workoutBurn && workoutBurn > 0 ? (
-          <View className="flex-row items-center justify-between rounded-2xl bg-surface p-4 border border-border/60 dark:bg-neutral-900 dark:border-neutral-800">
-            <View className="flex-row items-center gap-3">
-              <View className="h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10">
-                <Dumbbell size={20} color="#F97316" />
-              </View>
-              <View>
-                <Text variant="subhead" weight="bold">Workout Burn</Text>
-                <Text variant="caption" color="muted">Active calories burned</Text>
-              </View>
-            </View>
-            <Text variant="title3" weight="bold" className="text-orange-500">
-              -{workoutBurn} kcal
-            </Text>
-          </View>
-        ) : null}
+        <CaloriesCard consumed={macros} goals={goals} burnedCalories={workoutBurn ?? 0} />
 
         <WaterCard
           consumedMl={waterTotal.data ?? 0}
           targetMl={goals.waterMl}
           stepMl={WATER_STEP_ML}
           onAdd={handleAddWater}
+        />
+
+        <FitnessWidgets
+          onOpenSupplements={() => setSupplementOpen(true)}
+          onOpenSleep={() => setSleepOpen(true)}
         />
 
         <InsightCard title={insight.title} message={insight.message} />

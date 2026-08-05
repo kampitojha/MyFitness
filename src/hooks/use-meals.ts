@@ -3,6 +3,7 @@ import { QUERY_KEYS } from '@/constants';
 import { mealService } from '@/services/meal.service';
 import type { Meal, MealDraft } from '@/types/meals';
 import type { Macros } from '@/types/nutrition';
+import { toISODate } from '@/utils/date';
 
 export function useMeals() {
   return useQuery({
@@ -71,7 +72,7 @@ export function useDeleteMeal() {
 }
 
 export function useTodayMacros(): { macros: Macros; isLoading: boolean } {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = toISODate();
   const { data, isLoading } = useDailyTotals(today);
   return {
     macros: data ?? { calories: 0, protein: 0, carbs: 0, fat: 0 },
