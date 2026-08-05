@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { MotiView } from 'moti';
+
 import { useTheme } from '@/hooks/use-theme';
 
 export interface ScannerOverlayProps {
@@ -25,15 +25,12 @@ export function ScannerOverlay({ scanning, showFrame = true }: ScannerOverlayPro
       ) : null}
 
       {scanning ? (
-        <MotiView
-          from={{ translateY: -220, opacity: 0 }}
-          animate={{ translateY: 220, opacity: [0, 1, 1, 0] }}
-          transition={{ type: 'timing', duration: 1400, loop: true, repeatReverse: true }}
+        <View
           className="absolute left-0 right-0 top-1/2 mx-10 h-0.5 rounded-full"
           style={{ backgroundColor: colors.accent }}
         >
           <View style={{ backgroundColor: colors.accent }} className="h-0.5 w-16 rounded-full" />
-        </MotiView>
+        </View>
       ) : null}
     </View>
   );

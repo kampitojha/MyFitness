@@ -1,13 +1,13 @@
 import '@/global.css';
 
 import { useCallback, useEffect } from 'react';
-import { View, useColorScheme, Appearance } from 'react-native';
+import { View, useColorScheme, Appearance, Platform } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+
 
 import { queryClient } from '@/lib/query-client';
 import { useSettingsStore } from '@/store/settings.store';
@@ -53,8 +53,9 @@ export default function RootLayout() {
   const themePref = useSettingsStore((s) => s.theme);
 
   useEffect(() => {
+    if (Platform.OS === 'web') return;
     if (themePref === 'system') {
-      Appearance.setColorScheme('unspecified');
+      Appearance.setColorScheme(null);
     } else {
       Appearance.setColorScheme(scheme === 'dark' ? 'dark' : 'light');
     }
@@ -73,11 +74,9 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
             <View className="flex-1 bg-background dark:bg-background-dark">
               <RootNavigator />
             </View>
-          </ThemeProvider>
         </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

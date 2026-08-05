@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { MotiView } from 'moti';
+
 import { cn } from '@/utils/cn';
 
 export interface StepperProps {
@@ -21,10 +21,7 @@ export function Stepper({ step, total }: StepperProps) {
         return (
           <View key={i} className={cn('h-1.5 flex-1 overflow-hidden rounded-full', isComplete ? 'bg-primary-600 dark:bg-emerald-400' : 'bg-neutral-200 dark:bg-neutral-800')}>
             {isActive ? (
-              <MotiView
-                from={{ width: '0%' }}
-                animate={{ width: '100%' }}
-                transition={{ type: 'timing', duration: 350 }}
+              <View
                 className="h-full rounded-full bg-primary-600 dark:bg-emerald-400"
               />
             ) : null}
