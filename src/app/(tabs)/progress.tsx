@@ -72,14 +72,14 @@ export default function ProgressScreen() {
             variant="soft"
             size="sm"
             onPress={() => setShareModalOpen(true)}
-            icon={<Share2 size={15} color="#0E7A4A" />}
+            icon={<Share2 size={15} color="#0284C7" />}
           />
           <Button
             label="PDF"
             variant="soft"
             size="sm"
             onPress={generateWeeklyReportPDF}
-            icon={<FileText size={15} color="#0E7A4A" />}
+            icon={<FileText size={15} color="#0284C7" />}
           />
         </View>
       </View>
@@ -160,7 +160,7 @@ export default function ProgressScreen() {
       </View>
 
       <View className="mb-3 mt-6 flex-row items-center gap-2">
-        <Trophy size={18} color="#0E7A4A" />
+        <Trophy size={18} color="#0284C7" />
         <Text variant="title3" className="text-ink dark:text-neutral-50">
           Achievements
         </Text>

@@ -45,7 +45,7 @@ export function ProgressBar({
       style={{ height }}
     >
       <Animated.View
-        className={cn('h-full rounded-full bg-primary-600 dark:bg-emerald-400', barClassName)}
+        className={cn('h-full rounded-full bg-primary-600 dark:bg-sky-400', barClassName)}
         style={[{ height }, color ? { backgroundColor: color } : undefined, barStyle]}
       />
     </View>

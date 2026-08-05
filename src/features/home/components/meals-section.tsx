@@ -38,7 +38,7 @@ export function MealsSection({ meals, loading, emptyActionLabel, emptyActionOnPr
   if (grouped.length === 0) {
     return (
       <EmptyState
-        icon={<Camera size={26} color="#0E7A4A" />}
+        icon={<Camera size={26} color="#0284C7" />}
         title="No meals logged yet"
         description="Scan your first meal to start tracking nutrition in seconds."
         actionLabel={emptyActionLabel}

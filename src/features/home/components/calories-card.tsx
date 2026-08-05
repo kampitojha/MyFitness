@@ -51,14 +51,14 @@ export function CaloriesCard({ consumed, goals, burnedCalories = 0 }: CaloriesCa
           className={
             isOver
               ? 'mt-4 flex-row items-center justify-center gap-1.5 rounded-full bg-danger-soft px-4 py-1.5 dark:bg-red-950'
-              : 'mt-4 flex-row items-center justify-center gap-1.5 rounded-full bg-primary-soft px-4 py-1.5 dark:bg-emerald-900'
+              : 'mt-4 flex-row items-center justify-center gap-1.5 rounded-full bg-primary-soft px-4 py-1.5 dark:bg-sky-900'
           }
         >
           <Flame size={14} color={isOver ? statusColors.danger : MACRO_COLORS.calories} />
           <Text
             variant="footnote"
             weight="semibold"
-            className={isOver ? 'text-danger dark:text-red-300' : 'text-primary-softText dark:text-emerald-300'}
+            className={isOver ? 'text-danger dark:text-red-300' : 'text-primary-softText dark:text-sky-300'}
           >
             {isOver ? `${formatNumber(amount)} kcal over` : `${formatNumber(amount)} kcal remaining`}
             {burnedCalories > 0 ? ` (incl. -${formatNumber(burnedCalories)} workout)` : ''}

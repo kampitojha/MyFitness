@@ -68,11 +68,11 @@ export function WorkoutModal({ visible, onClose }: WorkoutModalProps) {
         className="mb-4"
       />
 
-      <View className="mb-5 flex-row items-center justify-between rounded-2xl bg-primary-soft p-4 dark:bg-emerald-950">
+      <View className="mb-5 flex-row items-center justify-between rounded-2xl bg-primary-soft p-4 dark:bg-sky-950">
         <View className="flex-row items-center gap-2">
-          <Flame size={22} color="#0E7A4A" />
+          <Flame size={22} color="#0284C7" />
           <View>
-            <Text variant="subhead" weight="bold" className="text-primary-softText dark:text-emerald-200">
+            <Text variant="subhead" weight="bold" className="text-primary-softText dark:text-sky-200">
               Estimated Burn
             </Text>
             <Text variant="caption" color="secondary">
@@ -81,7 +81,7 @@ export function WorkoutModal({ visible, onClose }: WorkoutModalProps) {
           </View>
         </View>
 
-        <Text variant="title1" weight="bold" className="text-primary-600 dark:text-emerald-400">
+        <Text variant="title1" weight="bold" className="text-primary-600 dark:text-sky-400">
           -{estimatedBurn} <Text variant="bodySmall" color="secondary">kcal</Text>
         </Text>
       </View>

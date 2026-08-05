@@ -43,10 +43,10 @@ export function WaterCard({ consumedMl, targetMl = WATER_TARGET_ML, onAdd, stepM
           onPress={onAdd}
           accessibilityRole="button"
           accessibilityLabel="Add a glass of water"
-          className="flex-row items-center gap-1 rounded-full bg-primary-soft px-3.5 py-2 dark:bg-emerald-900"
+          className="flex-row items-center gap-1 rounded-full bg-primary-soft px-3.5 py-2 dark:bg-sky-900"
         >
           <Plus size={14} color={colors.primary} />
-          <Text variant="footnote" weight="semibold" className="text-primary-softText dark:text-emerald-300">
+          <Text variant="footnote" weight="semibold" className="text-primary-softText dark:text-sky-300">
             Add
           </Text>
         </PressableScale>

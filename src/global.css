@@ -7,10 +7,25 @@
     -apple-system, 'SF Pro Display', Inter, ui-sans-serif, system-ui, sans-serif;
   --font-body:
     -apple-system, 'SF Pro Text', Inter, ui-sans-serif, system-ui, sans-serif;
+
+  /* Sky Blue + White Theme Tokens */
+  --color-primary: #0284C7;
+  --color-primary-light: #38BDF8;
+  --color-primary-soft: #F0F9FF;
+  --color-background: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F0F9FF;
+  --color-border: #E2E8F0;
+  --color-text: #0C1120;
+  --color-text-muted: #94A3B8;
 }
 
 @layer base {
   * {
-    border-color: theme('colors.black / 5%');
+    border-color: theme('colors.sky.100 / 80%');
   }
-}
+
+  html, body, #root {
+    background-color: #FFFFFF;
+  }
+}

@@ -10,7 +10,7 @@ export interface AvatarProps {
   name?: string;
 }
 
-const AVATAR_COLORS = ['#0E7A4A', '#0C623C', '#38C882', '#083F28'];
+const AVATAR_COLORS = ['#0284C7', '#0369A1', '#38BDF8', '#0C4A6E'];
 
 function initials(name: string): string {
   return name

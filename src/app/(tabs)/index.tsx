@@ -99,7 +99,7 @@ export default function HomeScreen() {
             variant="surface"
             label="AI Coach Assistant"
             onPress={() => setAiCoachOpen(true)}
-            icon={<Sparkles size={20} color="#0E7A4A" />}
+            icon={<Sparkles size={20} color="#0284C7" />}
           />
           <PressableScale onPress={() => router.push('/profile')}>
             <Avatar name={profile?.name} size={44} />
@@ -113,7 +113,7 @@ export default function HomeScreen() {
             label="Complete your profile"
             onPress={() => router.push('/(onboarding)')}
             variant="soft"
-            icon={<Flame size={18} color="#0E7A4A" />}
+            icon={<Flame size={18} color="#0284C7" />}
           />
         </View>
       ) : null}
@@ -126,7 +126,7 @@ export default function HomeScreen() {
           size="sm"
           className="flex-1"
           onPress={() => setFoodSearchOpen(true)}
-          icon={<Search size={16} color="#0E7A4A" />}
+          icon={<Search size={16} color="#0284C7" />}
         />
         <Button
           label="Log Workout"
@@ -134,7 +134,7 @@ export default function HomeScreen() {
           size="sm"
           className="flex-1"
           onPress={() => setWorkoutOpen(true)}
-          icon={<Dumbbell size={16} color="#0E7A4A" />}
+          icon={<Dumbbell size={16} color="#0284C7" />}
         />
       </View>
 

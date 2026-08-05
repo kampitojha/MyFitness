@@ -25,7 +25,7 @@ export function EmptyState({
   return (
     <View className={cn('items-center px-6', compact ? 'py-8' : 'py-16', className)}>
       {icon ? (
-        <View className="mb-4 h-16 w-16 items-center justify-center rounded-full bg-primary-soft dark:bg-emerald-900">
+        <View className="mb-4 h-16 w-16 items-center justify-center rounded-full bg-primary-soft dark:bg-sky-900">
           {icon}
         </View>
       ) : null}

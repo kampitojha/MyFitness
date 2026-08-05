@@ -28,13 +28,13 @@ export function AchievementCard({ title, description, unlockedAt, progress, load
       disabled={!onPress || loading}
       className={cn(
         'flex-row items-center gap-3 rounded-[18px] border bg-surface p-4',
-        unlocked ? 'border-primary-soft dark:border-emerald-900' : 'border-border dark:border-neutral-800',
+        unlocked ? 'border-primary-soft dark:border-sky-900' : 'border-border dark:border-neutral-800',
       )}
     >
       <View
         className={cn(
           'h-11 w-11 items-center justify-center rounded-xl',
-          unlocked ? 'bg-primary-soft dark:bg-emerald-900' : 'bg-surface-alt dark:bg-neutral-800',
+          unlocked ? 'bg-primary-soft dark:bg-sky-900' : 'bg-surface-alt dark:bg-neutral-800',
         )}
       >
         {loading ? (
@@ -42,7 +42,7 @@ export function AchievementCard({ title, description, unlockedAt, progress, load
         ) : (
           <Award
             size={20}
-            color={unlocked ? '#0E7A4A' : '#9AA3AF'}
+            color={unlocked ? '#0284C7' : '#9AA3AF'}
           />
         )}
       </View>

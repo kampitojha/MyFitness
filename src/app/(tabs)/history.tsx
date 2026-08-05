@@ -123,7 +123,7 @@ export default function HistoryScreen() {
 
         <PressableScale onPress={() => setSelectedDate(null)} className="items-center">
           <View className="flex-row items-center gap-1.5">
-            <Calendar size={14} color="#0E7A4A" />
+            <Calendar size={14} color="#0284C7" />
             <Text variant="subhead" weight="bold">
               {selectedDate ? (selectedDate === today ? 'Today' : relativeDayLabel(selectedDate)) : 'All Time'}
             </Text>
@@ -247,7 +247,7 @@ export default function HistoryScreen() {
                       <Text variant="caption2" color="muted">
                         {relativeDayLabel(meal.createdAt.slice(0, 10))}
                       </Text>
-                      <Text variant="caption2" weight="semibold" className="text-primary-600 dark:text-emerald-400">
+                      <Text variant="caption2" weight="semibold" className="text-primary-600 dark:text-sky-400">
                         {meal.macros.calories} kcal
                       </Text>
                     </View>

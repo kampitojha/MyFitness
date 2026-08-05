@@ -32,7 +32,7 @@ const GENDER_OPTIONS: { value: Gender; label: string }[] = [
 ];
 
 const GOAL_OPTIONS: { value: GoalType; label: string; description: string; icon: React.ReactNode }[] = [
-  { value: 'lose', label: 'Lose weight', description: 'Create a healthy calorie deficit', icon: <TrendingDown size={18} color="#0E7A4A" /> },
+  { value: 'lose', label: 'Lose weight', description: 'Create a healthy calorie deficit', icon: <TrendingDown size={18} color="#0284C7" /> },
   { value: 'maintain', label: 'Maintain weight', description: 'Keep your current weight steady', icon: <Minus size={18} color="#0EA5E9" /> },
   { value: 'gain', label: 'Build muscle', description: 'Gain mass with a calorie surplus', icon: <TrendingUp size={18} color="#8B5CF6" /> },
 ];
@@ -262,10 +262,10 @@ export default function EditProfileScreen() {
       {goalsChanged && (
         <>
           <Divider className="mt-6" />
-          <View className="mt-4 rounded-2xl bg-primary-soft p-4 dark:bg-emerald-950">
+          <View className="mt-4 rounded-2xl bg-primary-soft p-4 dark:bg-sky-950">
             <View className="mb-3 flex-row items-center gap-2">
-              <RefreshCw size={16} color="#0E7A4A" />
-              <Text variant="subhead" weight="semibold" className="text-primary-softText dark:text-emerald-300">
+              <RefreshCw size={16} color="#0284C7" />
+              <Text variant="subhead" weight="semibold" className="text-primary-softText dark:text-sky-300">
                 Updated daily plan (suggested)
               </Text>
             </View>
@@ -277,16 +277,16 @@ export default function EditProfileScreen() {
                 { label: 'Fat', value: `${formatNumber(suggestedGoals.fat)}g` },
               ] as const).map((item) => (
                 <View key={item.label} className="items-center">
-                  <Text variant="subhead" weight="bold" className="text-primary-softText dark:text-emerald-200">
+                  <Text variant="subhead" weight="bold" className="text-primary-softText dark:text-sky-200">
                     {item.value}
                   </Text>
-                  <Text variant="caption2" className="text-primary-softText/70 dark:text-emerald-400">
+                  <Text variant="caption2" className="text-primary-softText/70 dark:text-sky-400">
                     {item.label}
                   </Text>
                 </View>
               ))}
             </View>
-            <Text variant="caption" color="muted" className="mt-3 text-center dark:text-emerald-400/70">
+            <Text variant="caption" color="muted" className="mt-3 text-center dark:text-sky-400/70">
               Tap Save → choose whether to apply these goals
             </Text>
           </View>

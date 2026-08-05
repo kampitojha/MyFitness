@@ -44,15 +44,15 @@ export function WeeklyReportCard() {
   }, [stats.daysHitProtein]);
 
   return (
-    <Card className="p-4 bg-gradient-to-br from-emerald-500/10 via-primary-500/5 to-transparent dark:from-emerald-950/40 dark:border-emerald-900/50">
+    <Card className="p-4 bg-gradient-to-br from-sky-500/10 via-primary-500/5 to-transparent dark:from-sky-950/40 dark:border-sky-900/50">
       <View className="flex-row items-center justify-between mb-3">
         <View className="flex-row items-center gap-2">
-          <Trophy size={20} color="#0E7A4A" />
+          <Trophy size={20} color="#0284C7" />
           <Text variant="subhead" weight="bold">
             Weekly Performance Report
           </Text>
         </View>
-        <Text variant="caption" weight="semibold" className="text-primary-600 dark:text-emerald-400">
+        <Text variant="caption" weight="semibold" className="text-primary-600 dark:text-sky-400">
           {stats.daysHitProtein}/{stats.totalDays} Days Goal Met
         </Text>
       </View>

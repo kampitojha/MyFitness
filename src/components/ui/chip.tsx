@@ -20,7 +20,7 @@ export function Chip({ label, selected = false, onPress, icon, className }: Chip
       className={cn(
         'h-9 flex-row items-center gap-1.5 rounded-full border px-3.5',
         selected
-          ? 'border-primary-600 bg-primary-600 dark:border-emerald-400 dark:bg-emerald-400'
+          ? 'border-primary-600 bg-primary-600 dark:border-sky-400 dark:bg-sky-400'
           : 'border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900',
         className,
       )}
@@ -29,7 +29,7 @@ export function Chip({ label, selected = false, onPress, icon, className }: Chip
       <Text
         variant="footnote"
         weight="semibold"
-        className={cn(selected ? 'text-white dark:text-emerald-950' : 'text-ink-secondary dark:text-neutral-300')}
+        className={cn(selected ? 'text-white dark:text-sky-950' : 'text-ink-secondary dark:text-neutral-300')}
       >
         {label}
       </Text>

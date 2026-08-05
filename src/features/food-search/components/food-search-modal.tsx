@@ -119,15 +119,15 @@ export function FoodSearchModal({ visible, onClose, defaultMealType = 'lunch' }:
 
                   <View className="flex-row items-center justify-end">
                     <View className="items-end mr-2">
-                      <Text variant="bodySmall" weight="bold" className="text-primary-600 dark:text-emerald-400">
+                      <Text variant="bodySmall" weight="bold" className="text-primary-600 dark:text-sky-400">
                         {food.macros.calories} kcal
                       </Text>
                       <Text variant="caption2" color="muted">
                         P: {food.macros.protein}g · C: {food.macros.carbs}g
                       </Text>
                     </View>
-                    <View className="h-8 w-8 items-center justify-center rounded-full bg-primary-soft dark:bg-emerald-900">
-                      <Plus size={16} color="#0E7A4A" />
+                    <View className="h-8 w-8 items-center justify-center rounded-full bg-primary-soft dark:bg-sky-900">
+                      <Plus size={16} color="#0284C7" />
                     </View>
                   </View>
                 </Card>
@@ -163,7 +163,7 @@ export function FoodSearchModal({ visible, onClose, defaultMealType = 'lunch' }:
                   onPress={() => setQuantity((q) => Math.max(0.5, Math.round((q - 0.5) * 10) / 10))}
                   icon={<Minus size={18} color={colors.text} />}
                 />
-                <Text variant="title2" weight="bold" className="min-w-[50px] text-center text-primary-600 dark:text-emerald-400">
+                <Text variant="title2" weight="bold" className="min-w-[50px] text-center text-primary-600 dark:text-sky-400">
                   {quantity}x
                 </Text>
                 <IconButton
@@ -195,7 +195,7 @@ export function FoodSearchModal({ visible, onClose, defaultMealType = 'lunch' }:
               </Text>
 
               <View className="flex-row items-center justify-between mb-3">
-                <Text variant="title1" weight="bold" className="text-primary-600 dark:text-emerald-400">
+                <Text variant="title1" weight="bold" className="text-primary-600 dark:text-sky-400">
                   {currentMacros.calories} <Text variant="bodySmall" color="secondary">kcal</Text>
                 </Text>
               </View>

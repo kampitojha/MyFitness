@@ -22,12 +22,12 @@ export function SelectableOption({ label, description, icon, selected = false, o
       className={cn(
         'flex-row items-center gap-3 rounded-2xl border-2 p-4',
         selected
-          ? 'border-primary-600 bg-primary-soft dark:border-emerald-400 dark:bg-emerald-900'
+          ? 'border-primary-600 bg-primary-soft dark:border-sky-400 dark:bg-sky-900'
           : 'border-border bg-surface dark:border-neutral-800 dark:bg-neutral-900',
       )}
     >
       {icon ? (
-        <View className={cn('h-11 w-11 items-center justify-center rounded-xl', selected ? 'bg-white dark:bg-emerald-950' : 'bg-surface-alt dark:bg-neutral-800')}>
+        <View className={cn('h-11 w-11 items-center justify-center rounded-xl', selected ? 'bg-white dark:bg-sky-950' : 'bg-surface-alt dark:bg-neutral-800')}>
           {icon}
         </View>
       ) : null}
@@ -44,7 +44,7 @@ export function SelectableOption({ label, description, icon, selected = false, o
       <View
         className={cn(
           'h-6 w-6 items-center justify-center rounded-full border-2',
-          selected ? 'border-primary-600 bg-primary-600 dark:border-emerald-400 dark:bg-emerald-400' : 'border-neutral-300 dark:border-neutral-700',
+          selected ? 'border-primary-600 bg-primary-600 dark:border-sky-400 dark:bg-sky-400' : 'border-neutral-300 dark:border-neutral-700',
         )}
       >
         {selected ? <Check size={14} color="#FFFFFF" /> : null}
