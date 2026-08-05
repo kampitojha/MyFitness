@@ -251,8 +251,7 @@ export default function OnboardingScreen() {
                 </View>
               </View>
               <Text variant="caption" color="muted" className="text-center">
-                Based on your {activityLevel} activity level and goal to {goalType === 'lose' ? 'lose weight' : goalType === 'gain' ? 'build muscle' : 'maintain weight'}.
-                You can always change these in Settings.
+                Based on your {activityLevel} activity level and goal to {goalType === 'lose' ? 'lose weight' : goalType === 'gain' ? 'build muscle' : 'maintain weight'}. You can always change these in Settings.
               </Text>
             </View>
           )}
