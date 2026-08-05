@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-
 import { useTheme } from '@/hooks/use-theme';
 
 export interface ScannerOverlayProps {
@@ -18,8 +17,8 @@ export function ScannerOverlay({ scanning, showFrame = true }: ScannerOverlayPro
     <View pointerEvents="none" className="absolute inset-0">
       {showFrame && !scanning ? (
         <View className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2">
-          {['top-left', 'top-right', 'bottom-left', 'bottom-right'].map((corner) => (
-            <View key={corner} className={`${CORNER_CLASS[corner as Corner]} border-4 border-white/90 rounded-lg`} />
+          {(['top-left', 'top-right', 'bottom-left', 'bottom-right'] as const).map((corner) => (
+            <View key={corner} className={`${CORNER_CLASS[corner]} border-4 border-white/90 rounded-lg`} />
           ))}
         </View>
       ) : null}

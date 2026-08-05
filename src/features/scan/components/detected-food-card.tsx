@@ -19,7 +19,7 @@ export function DetectedFoodCard({ food, onUpdateQuantity, onRemove }: DetectedF
   const confidence = percent(food.confidence, 100);
 
   return (
-    <View className="rounded-[20px] border border-border bg-surface p-4 dark:border-neutral-800 dark:bg-neutral-900">
+    <View className="rounded-2xl border border-border bg-surface p-4 dark:border-neutral-800 dark:bg-neutral-900">
       <View className="flex-row items-start justify-between">
         <View className="flex-1">
           <View className="flex-row items-center gap-2">

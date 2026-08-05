@@ -16,7 +16,8 @@ export interface MealRowProps {
 
 export function MealRow({ meal, onPress, showImage = true }: MealRowProps) {
   const { colors } = useTheme();
-  const time = meal.createdAt.slice(11, 16);
+  const time = meal.createdAt.length > 10 ? meal.createdAt.slice(11, 16) : '';
+  const meta = `${MEAL_TYPE_LABELS[meal.type]}${time ? ` · ${time}` : ''}`;
 
   return (
     <PressableScale onPress={onPress} className="flex-row items-center gap-3">
@@ -38,7 +39,7 @@ export function MealRow({ meal, onPress, showImage = true }: MealRowProps) {
         </Text>
         <View className="flex-row items-center gap-1.5">
           <Text variant="caption" color="muted">
-            {MEAL_TYPE_LABELS[meal.type]} · {time}
+            {meta}
           </Text>
         </View>
         <View className="mt-0.5 flex-row items-center gap-2.5">

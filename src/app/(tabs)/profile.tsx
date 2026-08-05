@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
-  Target, Ruler, Weight as WeightIcon, Cake, Zap, Bell,
-  ShieldCheck, CircleHelp, MessageSquareText, LogOut, Scale, Sparkles, Settings,
+  Target, Ruler, Weight as WeightIcon, Zap, Bell,
+  ShieldCheck, CircleHelp, MessageSquareText, LogOut, Scale, Sparkles, Settings, Pencil,
 } from 'lucide-react-native';
 
 import { Screen } from '@/components/ui/screen';
@@ -18,8 +18,10 @@ import { SettingsRow } from '@/features/profile/components/settings-row';
 import { useProfile, useUpsertProfile } from '@/hooks/use-profile';
 import { useWeightForDate, useUpsertWeight } from '@/hooks/use-tracker';
 import { useSettingsStore, type AppThemePreference } from '@/store/settings.store';
-import { userService } from '@/services/user.service';
+import { useAuthStore } from '@/store/auth.store';
+import { authService } from '@/services/auth.service';
 import { formatNumber } from '@/utils/number';
+import { toISODate } from '@/utils/date';
 
 const THEME_OPTIONS: { value: AppThemePreference; label: string }[] = [
   { value: 'system', label: 'System' },
@@ -32,7 +34,7 @@ export default function ProfileScreen() {
   const { data: profile } = useProfile();
   const upsert = useUpsertProfile();
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = toISODate();
   const { data: todayWeight } = useWeightForDate(today);
   const upsertWeight = useUpsertWeight();
 
@@ -54,8 +56,9 @@ export default function ProfileScreen() {
   };
 
   const signOut = async () => {
-    await userService.setOnboarded(false);
-    router.replace('/(onboarding)');
+    await authService.signOut();
+    useAuthStore.getState().setUser(null);
+    router.replace('/');
   };
 
   return (
@@ -66,7 +69,8 @@ export default function ProfileScreen() {
         </Text>
       </View>
 
-      <View className="mb-5 flex-row items-center gap-4 rounded-[24px] bg-surface p-5 shadow-sm dark:bg-neutral-900">
+      {/* Profile card */}
+      <View className="mb-5 flex-row items-center gap-4 rounded-3xl bg-surface p-5 shadow-sm dark:bg-neutral-900">
         <Avatar name={profile?.name} uri={profile?.photoUri} size={64} />
         <View className="flex-1 gap-0.5">
           <Text variant="title3" weight="bold">
@@ -79,6 +83,13 @@ export default function ProfileScreen() {
             Goal: {profile?.goalType ?? '—'} · {formatNumber(profile?.age ?? 0)}y
           </Text>
         </View>
+        <Button
+          label="Edit"
+          variant="soft"
+          size="sm"
+          onPress={() => router.push('/edit-profile')}
+          icon={<Pencil size={14} color="#0E7A4A" />}
+        />
       </View>
 
       <View className="mb-5 flex-row gap-3">
@@ -104,17 +115,17 @@ export default function ProfileScreen() {
           onPress={() => setGoalsOpen(true)}
         />
         <SettingsRow
-          label="Body details"
-          icon={<Cake size={18} color="#0E7A4A" />}
-          onPress={() => router.push('/(onboarding)')}
+          label="Edit profile & body details"
+          icon={<Pencil size={18} color="#0E7A4A" />}
+          onPress={() => router.push('/edit-profile')}
         />
       </View>
 
       <Text variant="title3" className="mb-3 text-ink dark:text-neutral-50">
         Preferences
       </Text>
-      <View className="mb-5 flex-row items-center justify-between rounded-2xl bg-surface p-4 dark:bg-neutral-900">
-        <View className="flex-row items-center gap-3">
+      <View className="mb-5 rounded-2xl bg-surface p-4 shadow-sm dark:bg-neutral-900">
+        <View className="mb-3 flex-row items-center gap-3">
           <View className="h-9 w-9 items-center justify-center rounded-xl bg-surface-alt dark:bg-neutral-800">
             <Settings size={18} color="#0E7A4A" />
           </View>
@@ -122,7 +133,7 @@ export default function ProfileScreen() {
             Appearance
           </Text>
         </View>
-        <SegmentedControl options={THEME_OPTIONS} value={theme} onChange={setTheme} className="w-[52%]" />
+        <SegmentedControl options={THEME_OPTIONS} value={theme} onChange={setTheme} className="w-full" />
       </View>
 
       <SettingsRow
@@ -188,7 +199,7 @@ export default function ProfileScreen() {
 
 function StatBlock({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
   return (
-    <View className="flex-1 items-center rounded-[20px] bg-surface py-4 shadow-sm dark:bg-neutral-900">
+    <View className="flex-1 items-center rounded-2xl bg-surface py-4 shadow-sm dark:bg-neutral-900">
       {icon}
       <Text variant="subhead" weight="bold" className="mt-1.5 text-ink dark:text-neutral-50">
         {value}

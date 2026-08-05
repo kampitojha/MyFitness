@@ -11,7 +11,7 @@ export interface InsightCardProps {
 export function InsightCard({ title, message }: InsightCardProps) {
   const { colors } = useTheme();
   return (
-    <View className="rounded-[24px] bg-primary-soft p-5 dark:bg-emerald-900">
+    <View className="rounded-3xl bg-primary-soft p-5 dark:bg-emerald-900">
       <View className="flex-row items-center gap-2">
         <View className="h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-emerald-950">
           <Sparkles size={16} color={colors.primary} />

@@ -8,11 +8,9 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
 
-
 import { queryClient } from '@/lib/query-client';
 import { useSettingsStore } from '@/store/settings.store';
-import { useHasCompletedOnboarding } from '@/hooks/use-profile';
-import { Spinner } from '@/components/ui/spinner';
+import { useAuthStore } from '@/store/auth.store';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,26 +22,14 @@ function useResolvedColorScheme() {
 }
 
 function RootNavigator() {
-  const { data: onboarded, isLoading } = useHasCompletedOnboarding();
-
-  if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center bg-background dark:bg-background-dark">
-        <Spinner size="large" />
-      </View>
-    );
-  }
-
   return (
     <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
-      <Stack.Protected guard={!onboarded}>
-        <Stack.Screen name="(onboarding)" />
-        <Stack.Screen name="(auth)" />
-      </Stack.Protected>
-      <Stack.Protected guard={!!onboarded}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="meal/[id]" />
-      </Stack.Protected>
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="(onboarding)" />
+      <Stack.Screen name="(auth)" />
+      <Stack.Screen name="meal/[id]" />
+      <Stack.Screen name="edit-profile" options={{ animation: 'slide_from_right' }} />
     </Stack>
   );
 }
@@ -51,13 +37,35 @@ function RootNavigator() {
 export default function RootLayout() {
   const scheme = useResolvedColorScheme();
   const themePref = useSettingsStore((s) => s.theme);
+  const hydrateAuth = useAuthStore((s) => s.hydrate);
 
   useEffect(() => {
-    if (Platform.OS === 'web') return;
-    if (themePref === 'system') {
-      Appearance.setColorScheme(null);
-    } else {
-      Appearance.setColorScheme(scheme === 'dark' ? 'dark' : 'light');
+    let active = true;
+    let unsub: (() => void) | undefined;
+    hydrateAuth().then((u) => {
+      if (!active) return;
+      unsub = u;
+    });
+    return () => {
+      active = false;
+      unsub?.();
+    };
+  }, [hydrateAuth]);
+
+  useEffect(() => {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      const root = document.documentElement;
+      if (scheme === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+    } else if (Platform.OS !== 'web' && typeof Appearance?.setColorScheme === 'function') {
+      if (themePref === 'system') {
+        Appearance.setColorScheme('unspecified');
+      } else {
+        Appearance.setColorScheme(scheme === 'dark' ? 'dark' : 'light');
+      }
     }
   }, [themePref, scheme]);
 
@@ -72,11 +80,11 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
+      <SafeAreaProvider style={{ flex: 1 }}>
         <QueryClientProvider client={queryClient}>
-            <View className="flex-1 bg-background dark:bg-background-dark">
-              <RootNavigator />
-            </View>
+          <View style={{ flex: 1 }} className="bg-background dark:bg-background-dark">
+            <RootNavigator />
+          </View>
         </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

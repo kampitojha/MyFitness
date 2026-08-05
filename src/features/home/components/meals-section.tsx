@@ -48,7 +48,7 @@ export function MealsSection({ meals, loading, emptyActionLabel, emptyActionOnPr
   }
 
   return (
-    <View className="rounded-[24px] bg-surface p-5 shadow-sm dark:bg-neutral-900">
+    <View className="rounded-3xl bg-surface p-5 shadow-sm dark:bg-neutral-900">
       {grouped.map(({ type, items }, sectionIndex) => (
         <View key={type}>
           <View className="mb-3 flex-row items-center justify-between">
@@ -64,7 +64,7 @@ export function MealsSection({ meals, loading, emptyActionLabel, emptyActionOnPr
               <MealRow
                 key={meal.id}
                 meal={meal}
-                onPress={() => router.push(`/meal/${meal.id}`)}
+                onPress={() => router.push({ pathname: '/meal/[id]', params: { id: meal.id } })}
               />
             ))}
           </View>

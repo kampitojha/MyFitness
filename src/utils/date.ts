@@ -12,6 +12,14 @@ export function toISODate(d: Date = new Date()): string {
   return `${year}-${month}-${day}`;
 }
 
+/** Local, timezone-safe datetime string: `YYYY-MM-DDTHH:mm:ss` (no UTC shift).
+ *  Keeps both the local calendar day (slice 0,10) and the local clock time
+ *  (slice 11,16) without drift. */
+export function toLocalDateTime(d: Date = new Date()): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${toISODate(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
 export function fromISODate(iso: string): Date {
   const [year, month, day] = iso.split('-').map(Number);
   return new Date(year, month - 1, day);

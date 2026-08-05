@@ -1,5 +1,5 @@
-import { View, type ViewProps } from 'react-native';
-import { cn } from '@/utils/cn';
+import { cn } from "@/utils/cn";
+import { View, type ViewProps } from "react-native";
 
 export interface CardProps extends ViewProps {
   children: React.ReactNode;
@@ -7,14 +7,20 @@ export interface CardProps extends ViewProps {
   pressable?: boolean;
 }
 
-export function Card({ children, padded = true, pressable = false, className, ...props }: CardProps) {
+export function Card({
+  children,
+  padded = true,
+  pressable = false,
+  className,
+  ...props
+}: CardProps) {
   return (
     <View
       {...props}
       className={cn(
-        'rounded-[20px] bg-surface dark:bg-surface',
-        pressable ? 'active:opacity-90' : 'shadow-sm',
-        padded && 'p-4',
+        "rounded-2xl border border-border/60 bg-surface dark:border-neutral-800 dark:bg-neutral-900",
+        pressable ? "active:opacity-90" : "shadow-sm",
+        padded && "p-4",
         className,
       )}
     >

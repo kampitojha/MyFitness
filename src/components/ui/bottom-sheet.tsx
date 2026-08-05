@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
-import { Dimensions, Modal, Pressable, View } from 'react-native';
+import { Dimensions, Modal, Pressable, View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedStyle,
@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { springs } from '@/theme';
+import { useTheme } from '@/hooks/use-theme';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -17,14 +18,15 @@ export interface BottomSheetProps {
   onClose: () => void;
   title?: string;
   children: ReactNode;
-  snapTo?: number; // fraction of screen height the sheet occupies
+  snapTo?: number;
   dismissable?: boolean;
 }
 
 export function BottomSheet({ visible, onClose, title, children, snapTo = 0.6, dismissable = true }: BottomSheetProps) {
   const insets = useSafeAreaInsets();
+  const { isDark } = useTheme();
   const translateY = useSharedValue(SCREEN_HEIGHT);
-  const openHeight = Math.min(SCREEN_HEIGHT - insets.top - 24, Math.round(SCREEN_HEIGHT * snapTo));
+  const maxHeight = Math.min(SCREEN_HEIGHT - insets.top - 24, Math.round(SCREEN_HEIGHT * Math.max(snapTo, 0.7)));
 
   useEffect(() => {
     if (visible) {
@@ -40,18 +42,17 @@ export function BottomSheet({ visible, onClose, title, children, snapTo = 0.6, d
       if (e.translationY > 0) translateY.value = e.translationY;
     })
     .onEnd((e) => {
-      if (e.translationY > openHeight * 0.3 || e.velocityY > 800) {
+      if (e.translationY > 100 || e.velocityY > 800) {
         // eslint-disable-next-line react-hooks/immutability
         translateY.value = withSpring(SCREEN_HEIGHT, springs.snappy);
         setTimeout(onClose, 120);
       } else {
-         
         translateY.value = withSpring(0, springs.snappy);
       }
     });
 
   const sheetStyle = useAnimatedStyle(() => ({
-    height: openHeight,
+    maxHeight,
     transform: [{ translateY: translateY.value }],
   }));
 
@@ -61,42 +62,63 @@ export function BottomSheet({ visible, onClose, title, children, snapTo = 0.6, d
 
   return (
     <Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
-      <View style={{ flex: 1 }}>
-        <Animated.View
-          style={[overlayStyle, { flex: 1 }]}
-          className="bg-black/50"
-        >
-          {dismissable ? (
-            <Pressable
-              style={{ flex: 1 }}
-              onPress={onClose}
-              accessibilityRole="button"
-              accessibilityLabel="Close sheet"
-            />
-          ) : null}
-        </Animated.View>
-        <GestureDetector gesture={pan}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+      >
+        <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'transparent' }}>
           <Animated.View
-            style={[
-              sheetStyle,
-              { paddingBottom: insets.bottom + 16 },
-            ]}
-            className="absolute bottom-0 left-0 right-0 rounded-t-[28px] bg-surface dark:bg-neutral-900"
+            style={[overlayStyle, { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.65)' }]}
           >
-            <View className="items-center pt-3 pb-2">
-              <View className="h-1.5 w-10 rounded-full bg-neutral-300 dark:bg-neutral-700" />
-            </View>
-            {title ? (
-              <View className="px-6 pb-3">
-                <Animated.Text className="font-display text-[20px] font-semibold text-ink dark:text-neutral-100">
-                  {title}
-                </Animated.Text>
-              </View>
+            {dismissable ? (
+              <Pressable
+                style={{ flex: 1 }}
+                onPress={onClose}
+                accessibilityRole="button"
+                accessibilityLabel="Close sheet"
+              />
             ) : null}
-            <View className="px-6 flex-1">{children}</View>
           </Animated.View>
-        </GestureDetector>
-      </View>
+
+          <GestureDetector gesture={pan}>
+            <Animated.View
+              style={[
+                sheetStyle,
+                {
+                  paddingBottom: insets.bottom + 20,
+                  backgroundColor: isDark ? '#14181A' : '#FFFFFF',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: -4 },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 16,
+                  elevation: 24,
+                },
+              ]}
+              className="bottom-0 left-0 right-0 rounded-t-[28px] bg-white shadow-2xl dark:bg-neutral-900"
+            >
+              <View className="items-center pt-3 pb-2">
+                <View className="h-1.5 w-10 rounded-full bg-neutral-300 dark:bg-neutral-700" />
+              </View>
+
+              {title ? (
+                <View className="px-6 pb-3">
+                  <Animated.Text className="font-display text-[20px] font-semibold text-ink dark:text-neutral-100">
+                    {title}
+                  </Animated.Text>
+                </View>
+              ) : null}
+
+              <ScrollView
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 16 }}
+              >
+                {children}
+              </ScrollView>
+            </Animated.View>
+          </GestureDetector>
+        </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

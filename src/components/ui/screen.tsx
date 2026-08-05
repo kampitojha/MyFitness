@@ -1,4 +1,4 @@
-import { ScrollView, View, type ScrollViewProps } from 'react-native';
+import { ScrollView, View, type ScrollViewProps, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { cn } from '@/utils/cn';
@@ -9,6 +9,7 @@ export interface ScreenProps extends ScrollViewProps {
   scroll?: boolean;
   contentClassName?: string;
   padded?: boolean;
+  style?: StyleProp<ViewStyle>;
 }
 
 /**
@@ -22,6 +23,7 @@ export function Screen({
   contentClassName,
   padded = true,
   className,
+  style,
   ...scrollProps
 }: ScreenProps) {
   const content = (
@@ -29,7 +31,7 @@ export function Screen({
   );
 
   return (
-    <SafeAreaView edges={edges} className={cn('flex-1 bg-background dark:bg-background-dark', className)}>
+    <SafeAreaView edges={edges} style={[{ flex: 1 }, style]} className={cn('bg-background dark:bg-background-dark', className)}>
       <StatusBar style="auto" />
       {scroll ? (
         <ScrollView

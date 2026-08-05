@@ -35,8 +35,25 @@ export const ACTIVITY_LEVELS: { value: ActivityLevel; label: string; factor: num
   { value: 'veryActive', label: 'Extremely active', factor: 1.9 },
 ];
 
-export function defaultDailyGoals(activityFactor: number, goalType: GoalType): DailyGoals {
-  const bmr = 10 * 70 + 6.25 * 175 - 5 * 28 + 5;
+export function calculateBMR(opts: {
+  gender: Gender;
+  age: number;
+  heightCm: number;
+  weightKg: number;
+}): number {
+  const { gender, age, heightCm, weightKg } = opts;
+  const base = 10 * weightKg + 6.25 * heightCm - 5 * age;
+  if (gender === 'male') return base + 5;
+  if (gender === 'female') return base - 161;
+  return base - 78;
+}
+
+export function defaultDailyGoals(
+  activityFactor: number,
+  goalType: GoalType,
+  body?: { gender: Gender; age: number; heightCm: number; weightKg: number },
+): DailyGoals {
+  const bmr = body ? calculateBMR(body) : calculateBMR({ gender: 'other', age: 28, heightCm: 172, weightKg: 70 });
   let tdee = bmr * activityFactor;
   if (goalType === 'lose') tdee -= 500;
   if (goalType === 'gain') tdee += 250;

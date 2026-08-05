@@ -2,20 +2,21 @@ import { useMemo, useState } from 'react';
 import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TrendingDown, Minus, TrendingUp, Ruler, Weight as WeightIcon, Sparkles } from 'lucide-react-native';
-
+import { TrendingDown, Minus, TrendingUp, Ruler, Weight as WeightIcon, Sparkles, ArrowRight } from 'lucide-react-native';
 
 import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PressableScale } from '@/components/ui/pressable-scale';
 import { Stepper } from '@/features/onboarding/components/stepper';
 import { SelectableOption } from '@/features/onboarding/components/selectable-option';
-import { useCompleteOnboarding } from '@/hooks/use-profile';
+import { useCompleteOnboarding, useProfile } from '@/hooks/use-profile';
+import { useAuthStore } from '@/store/auth.store';
 import type { ActivityLevel, Gender, GoalType } from '@/types/user';
 import { ACTIVITY_LEVELS, defaultDailyGoals } from '@/types/user';
 import { useTheme } from '@/hooks/use-theme';
 
-const STEPS = 5;
+const STEPS = 6;
 
 const GOAL_OPTIONS: { value: GoalType; label: string; description: string; icon: React.ReactNode }[] = [
   { value: 'lose', label: 'Lose weight', description: 'Create a healthy calorie deficit', icon: <TrendingDown size={20} color="#0E7A4A" /> },
@@ -34,9 +35,13 @@ export default function OnboardingScreen() {
   const router = useRouter();
   const complete = useCompleteOnboarding();
   const { colors } = useTheme();
+  const { data: profile } = useProfile();
+  const authUser = useAuthStore((s) => s.user);
+
+  const initialName = authUser?.name || profile?.name || '';
 
   const [step, setStep] = useState(0);
-  const [name, setName] = useState('');
+  const [name, setName] = useState(initialName);
   const [goalType, setGoalType] = useState<GoalType>('lose');
   const [gender, setGender] = useState<Gender>('other');
   const [age, setAge] = useState('28');
@@ -47,8 +52,13 @@ export default function OnboardingScreen() {
 
   const activity = ACTIVITY_LEVELS.find((a) => a.value === activityLevel);
   const goals = useMemo(
-    () => defaultDailyGoals(activity?.factor ?? 1.55, goalType),
-    [activity, goalType],
+    () => defaultDailyGoals(activity?.factor ?? 1.55, goalType, {
+      gender,
+      age: Number(age) || 28,
+      heightCm: Number(heightCm) || 172,
+      weightKg: Number(weightKg) || 70,
+    }),
+    [activity, goalType, gender, age, heightCm, weightKg],
   );
   const canContinue = useMemo(() => {
     const num = (v: string) => Number(v) > 0;
@@ -57,12 +67,14 @@ export default function OnboardingScreen() {
       case 1: return true;
       case 2: return num(age) && Number(age) >= 13 && Number(age) <= 100;
       case 3: return num(heightCm) && num(weightKg) && num(targetWeightKg);
-      case 4: return true;
+      case 4: return true; // activity level
+      case 5: return true; // plan summary / finish
       default: return true;
     }
   }, [step, name, age, heightCm, weightKg, targetWeightKg]);
 
   const handleNext = async () => {
+    if (!canContinue) return;
     if (step < STEPS - 1) {
       setStep(step + 1);
       return;
@@ -89,6 +101,7 @@ export default function OnboardingScreen() {
       case 2: return 'About you';
       case 3: return 'Your body';
       case 4: return 'Your activity level';
+      case 5: return 'Your daily plan is ready';
       default: return '';
     }
   }, [step]);
@@ -97,20 +110,26 @@ export default function OnboardingScreen() {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       className="flex-1 bg-background dark:bg-background-dark"
-      style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 12 }}
+      style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16 }}
     >
-      <View className="px-6 pb-5">
-        <Stepper step={step} total={STEPS} />
+      <View className="px-6 pb-4 flex-row items-center gap-3">
+        {step > 0 ? (
+          <PressableScale onPress={() => setStep(step - 1)} className="h-8 w-8 items-center justify-center rounded-full bg-surface dark:bg-neutral-900">
+            <Text variant="headline" className="text-ink dark:text-neutral-50">‹</Text>
+          </PressableScale>
+        ) : <View className="w-8" />}
+        <View className="flex-1">
+          <Stepper step={step} total={STEPS} />
+        </View>
       </View>
 
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="px-6"
-        contentContainerStyle={{ paddingBottom: 16 }}
+        contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 32 }}
       >
-        <View key={step}>
-          <Text variant="title1" className="mb-2 text-ink dark:text-neutral-50">
+        <View key={step} className="pt-2">
+          <Text variant="title1" className="mb-1 text-ink dark:text-neutral-50 font-bold">
             {title}
           </Text>
           <Text variant="bodySmall" color="secondary" className="mb-6">
@@ -118,28 +137,17 @@ export default function OnboardingScreen() {
           </Text>
 
           {step === 0 && (
-            <View className="gap-3">
+            <View className="gap-4">
               <Input
                 label="What should we call you?"
                 value={name}
                 onChangeText={setName}
-                placeholder="Your first name"
-                autoFocus
+                placeholder="Enter your name"
+                autoFocus={!initialName}
                 autoCapitalize="words"
+                returnKeyType="next"
+                onSubmitEditing={() => { if (canContinue) handleNext(); }}
               />
-              <View className="mt-2 flex-row justify-center gap-1">
-                <Text variant="bodySmall" color="secondary">
-                  Already have an account?
-                </Text>
-                <Text
-                  variant="bodySmall"
-                  weight="semibold"
-                  color="primary"
-                  onPress={() => router.push('/(auth)/login')}
-                >
-                  Log in
-                </Text>
-              </View>
             </View>
           )}
 
@@ -159,7 +167,7 @@ export default function OnboardingScreen() {
           )}
 
           {step === 2 && (
-            <View className="gap-3">
+            <View className="gap-4">
               <View className="flex-row gap-2">
                 {GENDER_OPTIONS.map((g) => (
                   <SelectableOption
@@ -176,12 +184,14 @@ export default function OnboardingScreen() {
                 value={age}
                 onChangeText={setAge}
                 placeholder="e.g. 28"
+                returnKeyType="next"
+                onSubmitEditing={() => { if (canContinue) handleNext(); }}
               />
             </View>
           )}
 
           {step === 3 && (
-            <View className="gap-3">
+            <View className="gap-4">
               <Input
                 label="Height (cm)"
                 leftIcon={<Ruler size={18} color={colors.textMuted} />}
@@ -205,6 +215,8 @@ export default function OnboardingScreen() {
                 value={targetWeightKg}
                 onChangeText={setTargetWeightKg}
                 placeholder="e.g. 65"
+                returnKeyType="done"
+                onSubmitEditing={() => { if (canContinue) handleNext(); }}
               />
             </View>
           )}
@@ -222,13 +234,13 @@ export default function OnboardingScreen() {
             </View>
           )}
 
-          {step === STEPS - 1 && (
-            <View className="gap-3">
-              <View className="rounded-[24px] bg-primary-soft p-5 dark:bg-emerald-900">
+          {step === 5 && (
+            <View className="gap-4">
+              <View className="rounded-3xl bg-primary-soft p-5 dark:bg-emerald-900">
                 <View className="flex-row items-center gap-2">
                   <Sparkles size={18} color={colors.primary} />
                   <Text variant="subhead" weight="semibold" className="text-primary-softText dark:text-emerald-200">
-                    Your daily plan
+                    Your personalized daily goals
                   </Text>
                 </View>
                 <View className="mt-4 flex-row justify-between">
@@ -239,23 +251,28 @@ export default function OnboardingScreen() {
                 </View>
               </View>
               <Text variant="caption" color="muted" className="text-center">
-                You can adjust these anytime in Settings.
+                Based on your {activityLevel} activity level and goal to {goalType === 'lose' ? 'lose weight' : goalType === 'gain' ? 'build muscle' : 'maintain weight'}.
+                You can always change these in Settings.
               </Text>
             </View>
           )}
+            </View>
+          )}
+
+          {/* Action Button Right Below Form */}
+          <View className="mt-8">
+            <Button
+              label={step === STEPS - 1 ? 'Finish setup' : 'Continue'}
+              onPress={handleNext}
+              disabled={!canContinue}
+              loading={step === STEPS - 1 && complete.isPending}
+              fullWidth
+              size="lg"
+              icon={step < STEPS - 1 ? <ArrowRight size={18} color="#FFFFFF" /> : undefined}
+            />
+          </View>
         </View>
       </ScrollView>
-
-      <View className="px-6">
-        <Button
-          label={step === STEPS - 1 ? 'Finish' : 'Continue'}
-          onPress={handleNext}
-          disabled={!canContinue}
-          loading={step === STEPS - 1 && complete.isPending}
-          fullWidth
-          size="lg"
-        />
-      </View>
     </KeyboardAvoidingView>
   );
 }

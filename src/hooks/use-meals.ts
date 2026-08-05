@@ -3,11 +3,20 @@ import { QUERY_KEYS } from '@/constants';
 import { mealService } from '@/services/meal.service';
 import type { Meal, MealDraft } from '@/types/meals';
 import type { Macros } from '@/types/nutrition';
+import { toISODate } from '@/utils/date';
 
 export function useMeals() {
   return useQuery({
     queryKey: QUERY_KEYS.meals,
     queryFn: () => mealService.list(),
+  });
+}
+
+export function useMeal(id: string) {
+  return useQuery({
+    queryKey: ['meal', id],
+    queryFn: () => mealService.getById(id),
+    enabled: Boolean(id),
   });
 }
 
@@ -42,15 +51,28 @@ export function useSaveMeal() {
 export function useDeleteMeal() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => mealService.delete(id),
-    onSuccess: () => {
+    mutationFn: async (id: string) => {
+      // Fetch the meal before deleting so we know which date to invalidate
+      const meal = await mealService.getById(id);
+      await mealService.delete(id);
+      return meal?.createdAt?.slice(0, 10) ?? null;
+    },
+    onSuccess: (date) => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.meals });
+      if (date) {
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.history(date) });
+        queryClient.invalidateQueries({ queryKey: ['totals', date] });
+      } else {
+        // Fallback: invalidate all history and totals
+        queryClient.invalidateQueries({ queryKey: ['history'] });
+        queryClient.invalidateQueries({ queryKey: ['totals'] });
+      }
     },
   });
 }
 
 export function useTodayMacros(): { macros: Macros; isLoading: boolean } {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = toISODate();
   const { data, isLoading } = useDailyTotals(today);
   return {
     macros: data ?? { calories: 0, protein: 0, carbs: 0, fat: 0 },
