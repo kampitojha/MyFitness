@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TrendingDown, Minus, TrendingUp, Ruler, Weight as WeightIcon, Sparkles, ArrowRight } from 'lucide-react-native';
+import { TrendingDown, Minus, TrendingUp, Ruler, Weight as WeightIcon, Sparkles, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react-native';
 
 import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,15 @@ import { ACTIVITY_LEVELS, defaultDailyGoals } from '@/types/user';
 import { useTheme } from '@/hooks/use-theme';
 
 const STEPS = 6;
+
+const STEP_LABELS = [
+  '1. Name',
+  '2. Goal',
+  '3. Details',
+  '4. Body',
+  '5. Activity',
+  '6. Summary',
+];
 
 const GOAL_OPTIONS: { value: GoalType; label: string; description: string; icon: React.ReactNode }[] = [
   { value: 'lose', label: 'Lose weight', description: 'Create a healthy calorie deficit', icon: <TrendingDown size={20} color="#0E7A4A" /> },
@@ -60,6 +69,7 @@ export default function OnboardingScreen() {
     }),
     [activity, goalType, gender, age, heightCm, weightKg],
   );
+
   const canContinue = useMemo(() => {
     const num = (v: string) => Number(v) > 0;
     switch (step) {
@@ -67,25 +77,24 @@ export default function OnboardingScreen() {
       case 1: return true;
       case 2: return num(age) && Number(age) >= 13 && Number(age) <= 100;
       case 3: return num(heightCm) && num(weightKg) && num(targetWeightKg);
-      case 4: return true; // activity level
-      case 5: return true; // plan summary / finish
+      case 4: return true;
+      case 5: return true;
       default: return true;
     }
   }, [step, name, age, heightCm, weightKg, targetWeightKg]);
 
   const handleNext = async () => {
-    if (!canContinue) return;
     if (step < STEPS - 1) {
       setStep(step + 1);
       return;
     }
     await complete.mutateAsync({
-      name,
+      name: name.trim() || 'User',
       gender,
-      age: Number(age),
-      heightCm: Number(heightCm),
-      weightKg: Number(weightKg),
-      targetWeightKg: Number(targetWeightKg),
+      age: Number(age) || 28,
+      heightCm: Number(heightCm) || 172,
+      weightKg: Number(weightKg) || 70,
+      targetWeightKg: Number(targetWeightKg) || 65,
       activityLevel,
       goalType,
       dailyGoals: goals,
@@ -97,11 +106,11 @@ export default function OnboardingScreen() {
   const title = useMemo(() => {
     switch (step) {
       case 0: return 'Let’s get to know you';
-      case 1: return 'What’s your goal?';
-      case 2: return 'About you';
-      case 3: return 'Your body';
-      case 4: return 'Your activity level';
-      case 5: return 'Your daily plan is ready';
+      case 1: return 'What’s your primary goal?';
+      case 2: return 'Basic demographics';
+      case 3: return 'Your body measurements';
+      case 4: return 'Your daily activity level';
+      case 5: return 'Your customized daily plan';
       default: return '';
     }
   }, [step]);
@@ -110,31 +119,94 @@ export default function OnboardingScreen() {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       className="flex-1 bg-background dark:bg-background-dark"
-      style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16 }}
+      style={{ paddingTop: insets.top + 12, paddingBottom: insets.bottom + 12 }}
     >
-      <View className="px-6 pb-4 flex-row items-center gap-3">
-        {step > 0 ? (
-          <PressableScale onPress={() => setStep(step - 1)} className="h-8 w-8 items-center justify-center rounded-full bg-surface dark:bg-neutral-900">
-            <Text variant="headline" className="text-ink dark:text-neutral-50">‹</Text>
-          </PressableScale>
-        ) : <View className="w-8" />}
-        <View className="flex-1">
-          <Stepper step={step} total={STEPS} />
+      <View className="px-5 pb-3">
+        <View className="flex-row items-center gap-3 mb-2">
+          {step > 0 ? (
+            <PressableScale
+              onPress={() => setStep(step - 1)}
+              className="h-9 w-9 items-center justify-center rounded-full bg-surface shadow-sm dark:bg-neutral-900 border border-border/60"
+            >
+              <ArrowLeft size={18} color={colors.text} />
+            </PressableScale>
+          ) : (
+            <View className="h-9 w-9" />
+          )}
+
+          <View className="flex-1">
+            <Stepper step={step} total={STEPS} onStepPress={(targetStep) => setStep(targetStep)} />
+          </View>
+
+          {step < STEPS - 1 ? (
+            <PressableScale
+              onPress={() => setStep(STEPS - 1)}
+              className="px-2.5 py-1 rounded-full bg-primary-500/10 dark:bg-emerald-500/20"
+            >
+              <Text variant="caption2" weight="bold" className="text-primary-600 dark:text-emerald-400">
+                Plan ›
+              </Text>
+            </PressableScale>
+          ) : (
+            <View className="w-12" />
+          )}
         </View>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 4, gap: 6 }}
+          className="mt-1"
+        >
+          {STEP_LABELS.map((label, idx) => {
+            const isCurrent = idx === step;
+            const isPast = idx < step;
+            return (
+              <PressableScale
+                key={idx}
+                onPress={() => setStep(idx)}
+                className={`flex-row items-center gap-1 px-3 py-1.5 rounded-full border ${
+                  isCurrent
+                    ? 'border-primary-600 bg-primary-600 dark:border-emerald-400 dark:bg-emerald-500'
+                    : isPast
+                    ? 'border-primary-500/30 bg-primary-500/10 dark:bg-emerald-950/40'
+                    : 'border-border/60 bg-surface dark:bg-neutral-900'
+                }`}
+              >
+                {isPast ? <CheckCircle2 size={12} color={colors.primary} /> : null}
+                <Text
+                  variant="caption2"
+                  weight={isCurrent ? 'bold' : 'medium'}
+                  className={
+                    isCurrent
+                      ? 'text-white'
+                      : isPast
+                      ? 'text-primary-600 dark:text-emerald-400'
+                      : 'text-text-muted dark:text-neutral-400'
+                  }
+                >
+                  {label}
+                </Text>
+              </PressableScale>
+            );
+          })}
+        </ScrollView>
       </View>
 
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 32 }}
+        contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 40 }}
       >
         <View key={step} className="pt-2">
-          <Text variant="title1" className="mb-1 text-ink dark:text-neutral-50 font-bold">
-            {title}
-          </Text>
-          <Text variant="bodySmall" color="secondary" className="mb-6">
-            Step {step + 1} of {STEPS}
-          </Text>
+          <View className="mb-4">
+            <Text variant="title1" className="text-ink dark:text-neutral-50 font-bold">
+              {title}
+            </Text>
+            <Text variant="bodySmall" color="secondary" className="mt-1">
+              Step {step + 1} of {STEPS} — Complete your profile setup
+            </Text>
+          </View>
 
           {step === 0 && (
             <View className="gap-4">
@@ -142,12 +214,15 @@ export default function OnboardingScreen() {
                 label="What should we call you?"
                 value={name}
                 onChangeText={setName}
-                placeholder="Enter your name"
+                placeholder="Enter your full name"
                 autoFocus={!initialName}
                 autoCapitalize="words"
                 returnKeyType="next"
-                onSubmitEditing={() => { if (canContinue) handleNext(); }}
+                onSubmitEditing={handleNext}
               />
+              <Text variant="caption" color="muted">
+                Your name helps customize your daily health stats and fitness reports.
+              </Text>
             </View>
           )}
 
@@ -160,7 +235,9 @@ export default function OnboardingScreen() {
                   description={opt.description}
                   icon={opt.icon}
                   selected={goalType === opt.value}
-                  onPress={() => setGoalType(opt.value)}
+                  onPress={() => {
+                    setGoalType(opt.value);
+                  }}
                 />
               ))}
             </View>
@@ -168,24 +245,28 @@ export default function OnboardingScreen() {
 
           {step === 2 && (
             <View className="gap-4">
+              <Text variant="subhead" weight="medium" className="text-ink dark:text-neutral-200">
+                Gender
+              </Text>
               <View className="flex-row gap-2">
                 {GENDER_OPTIONS.map((g) => (
-                  <SelectableOption
-                    key={g.value}
-                    label={g.label}
-                    selected={gender === g.value}
-                    onPress={() => setGender(g.value)}
-                  />
+                  <View key={g.value} className="flex-1">
+                    <SelectableOption
+                      label={g.label}
+                      selected={gender === g.value}
+                      onPress={() => setGender(g.value)}
+                    />
+                  </View>
                 ))}
               </View>
               <Input
-                label="Your age"
+                label="Your age (years)"
                 keyboardType="number-pad"
                 value={age}
                 onChangeText={setAge}
                 placeholder="e.g. 28"
                 returnKeyType="next"
-                onSubmitEditing={() => { if (canContinue) handleNext(); }}
+                onSubmitEditing={handleNext}
               />
             </View>
           )}
@@ -216,7 +297,7 @@ export default function OnboardingScreen() {
                 onChangeText={setTargetWeightKg}
                 placeholder="e.g. 65"
                 returnKeyType="done"
-                onSubmitEditing={() => { if (canContinue) handleNext(); }}
+                onSubmitEditing={handleNext}
               />
             </View>
           )}
@@ -227,6 +308,7 @@ export default function OnboardingScreen() {
                 <SelectableOption
                   key={a.value}
                   label={a.label}
+                  description={`Multiplier factor: ${a.factor}x BMR`}
                   selected={activityLevel === a.value}
                   onPress={() => setActivityLevel(a.value)}
                 />
@@ -236,11 +318,11 @@ export default function OnboardingScreen() {
 
           {step === 5 && (
             <View className="gap-4">
-              <View className="rounded-3xl bg-primary-soft p-5 dark:bg-emerald-900">
+              <View className="rounded-3xl bg-primary-soft p-5 dark:bg-emerald-950/80 border border-primary-500/20">
                 <View className="flex-row items-center gap-2">
-                  <Sparkles size={18} color={colors.primary} />
-                  <Text variant="subhead" weight="semibold" className="text-primary-softText dark:text-emerald-200">
-                    Your personalized daily goals
+                  <Sparkles size={20} color={colors.primary} />
+                  <Text variant="subhead" weight="bold" className="text-primary-softText dark:text-emerald-200">
+                    Your calculated targets
                   </Text>
                 </View>
                 <View className="mt-4 flex-row justify-between">
@@ -250,24 +332,44 @@ export default function OnboardingScreen() {
                   <PlanStat label="Fat" value={`${goals.fat} g`} />
                 </View>
               </View>
+
+              <View className="rounded-2xl bg-surface p-4 border border-border/60 dark:bg-neutral-900 gap-2">
+                <Text variant="caption" color="secondary">
+                  🎯 <Text weight="bold">Goal:</Text> {goalType === 'lose' ? 'Weight Loss' : goalType === 'gain' ? 'Muscle Gain' : 'Weight Maintenance'}
+                </Text>
+                <Text variant="caption" color="secondary">
+                  🏋️ <Text weight="bold">Activity:</Text> {activityLevel} ({activity?.factor}x)
+                </Text>
+                <Text variant="caption" color="secondary">
+                  ⚖️ <Text weight="bold">Weight Range:</Text> {weightKg} kg → Target {targetWeightKg} kg
+                </Text>
+              </View>
+
               <Text variant="caption" color="muted" className="text-center">
-                Based on your {activityLevel} activity level and goal to {goalType === 'lose' ? 'lose weight' : goalType === 'gain' ? 'build muscle' : 'maintain weight'}.
-                You can always change these in Settings.
+                You can adjust these goals anytime under Profile → Daily Goals.
               </Text>
             </View>
           )}
 
-          {/* Action Button Right Below Form */}
-          <View className="mt-8">
+          <View className="mt-8 gap-3">
             <Button
-              label={step === STEPS - 1 ? 'Finish setup' : 'Continue'}
+              label={step === STEPS - 1 ? 'Finish setup & Go to Dashboard' : `Continue to Step ${step + 2}`}
               onPress={handleNext}
               disabled={!canContinue}
               loading={step === STEPS - 1 && complete.isPending}
               fullWidth
               size="lg"
-              icon={step < STEPS - 1 ? <ArrowRight size={18} color="#FFFFFF" /> : undefined}
+              icon={step < STEPS - 1 ? <ArrowRight size={18} color="#FFFFFF" /> : <CheckCircle2 size={18} color="#FFFFFF" />}
             />
+
+            {step > 0 ? (
+              <Button
+                label={`‹ Back to Step ${step}`}
+                onPress={() => setStep(step - 1)}
+                variant="ghost"
+                fullWidth
+              />
+            ) : null}
           </View>
         </View>
       </ScrollView>
