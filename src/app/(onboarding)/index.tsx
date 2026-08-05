@@ -83,24 +83,33 @@ export default function OnboardingScreen() {
     }
   }, [step, name, age, heightCm, weightKg, targetWeightKg]);
 
+  const finishAndGoHome = async () => {
+    try {
+      await complete.mutateAsync({
+        name: name.trim() || 'User',
+        gender,
+        age: Number(age) || 28,
+        heightCm: Number(heightCm) || 172,
+        weightKg: Number(weightKg) || 70,
+        targetWeightKg: Number(targetWeightKg) || 65,
+        activityLevel,
+        goalType,
+        dailyGoals: goals,
+        onboardingCompleted: true,
+      });
+    } catch (err) {
+      console.warn('Failed to complete onboarding profile, navigating anyway:', err);
+    } finally {
+      router.replace('/(tabs)');
+    }
+  };
+
   const handleNext = async () => {
     if (step < STEPS - 1) {
       setStep(step + 1);
       return;
     }
-    await complete.mutateAsync({
-      name: name.trim() || 'User',
-      gender,
-      age: Number(age) || 28,
-      heightCm: Number(heightCm) || 172,
-      weightKg: Number(weightKg) || 70,
-      targetWeightKg: Number(targetWeightKg) || 65,
-      activityLevel,
-      goalType,
-      dailyGoals: goals,
-      onboardingCompleted: true,
-    });
-    router.replace('/(tabs)');
+    await finishAndGoHome();
   };
 
   const title = useMemo(() => {
@@ -138,18 +147,14 @@ export default function OnboardingScreen() {
             <Stepper step={step} total={STEPS} onStepPress={(targetStep) => setStep(targetStep)} />
           </View>
 
-          {step < STEPS - 1 ? (
-            <PressableScale
-              onPress={() => setStep(STEPS - 1)}
-              className="px-2.5 py-1 rounded-full bg-primary-500/10 dark:bg-emerald-500/20"
-            >
-              <Text variant="caption2" weight="bold" className="text-primary-600 dark:text-emerald-400">
-                Plan ›
-              </Text>
-            </PressableScale>
-          ) : (
-            <View className="w-12" />
-          )}
+          <PressableScale
+            onPress={finishAndGoHome}
+            className="px-3 py-1.5 rounded-full bg-primary-600 dark:bg-emerald-500 shadow-sm"
+          >
+            <Text variant="caption2" weight="bold" className="text-white">
+              Home 🏠
+            </Text>
+          </PressableScale>
         </View>
 
         <ScrollView
@@ -353,10 +358,9 @@ export default function OnboardingScreen() {
 
           <View className="mt-8 gap-3">
             <Button
-              label={step === STEPS - 1 ? 'Finish setup & Go to Dashboard' : `Continue to Step ${step + 2}`}
-              onPress={handleNext}
-              disabled={!canContinue}
-              loading={step === STEPS - 1 && complete.isPending}
+              label={step === STEPS - 1 ? '🎉 Go to Home Dashboard' : `Continue to Step ${step + 2}`}
+              onPress={finishAndGoHome}
+              loading={complete.isPending}
               fullWidth
               size="lg"
               icon={step < STEPS - 1 ? <ArrowRight size={18} color="#FFFFFF" /> : <CheckCircle2 size={18} color="#FFFFFF" />}
