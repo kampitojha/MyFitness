@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,6 +13,7 @@ import { Button, IconButton } from '@/components/ui/button';
 import { authService } from '@/services/auth.service';
 import { userService } from '@/services/user.service';
 import { useAuthStore } from '@/store/auth.store';
+import { isFirebaseConfigured } from '@/config/firebase';
 import { useTheme } from '@/hooks/use-theme';
 
 const schema = z.object({
@@ -29,6 +31,7 @@ export default function LoginScreen() {
     resolver: zodResolver(schema),
     defaultValues: { email: '', password: '' },
   });
+  const [email, setEmail] = useState('');
 
   const onSubmit = async (values: FormValues) => {
     try {
@@ -39,6 +42,19 @@ export default function LoginScreen() {
       router.replace(profile?.onboardingCompleted ? '/(tabs)' : '/(onboarding)');
     } catch (err) {
       Alert.alert('Login failed', err instanceof Error ? err.message : 'Please try again.');
+    }
+  };
+
+  const onForgotPassword = async (email: string) => {
+    if (!email) {
+      Alert.alert('Reset password', 'Enter your email to receive a reset link.');
+      return;
+    }
+    try {
+      await authService.sendPasswordResetEmail(email);
+      Alert.alert('Check your inbox', 'A password reset link has been sent to your email.');
+    } catch (err) {
+      Alert.alert('Reset failed', err instanceof Error ? err.message : 'Please try again.');
     }
   };
 
@@ -71,7 +87,10 @@ export default function LoginScreen() {
                 autoCapitalize="none"
                 autoComplete="email"
                 value={field.value}
-                onChangeText={field.onChange}
+                onChangeText={(v) => {
+                  setEmail(v);
+                  field.onChange(v);
+                }}
                 onBlur={field.onBlur}
                 error={fieldState.error?.message}
               />
@@ -94,9 +113,17 @@ export default function LoginScreen() {
             )}
           />
 
-          <Text variant="footnote" color="primary" weight="semibold" className="self-end mt-1">
-            Forgot password?
-          </Text>
+          {isFirebaseConfigured ? (
+            <Text
+              variant="footnote"
+              color="primary"
+              weight="semibold"
+              className="self-end mt-1"
+              onPress={() => onForgotPassword(email)}
+            >
+              Forgot password?
+            </Text>
+          ) : null}
 
           <Button
             label="Log in"

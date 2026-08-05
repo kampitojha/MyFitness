@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
   updateProfile,
+  sendPasswordResetEmail as firebaseSendPasswordReset,
   onAuthStateChanged as firebaseOnAuthStateChanged,
   type Auth,
   type User,
@@ -72,6 +73,7 @@ export interface AuthService {
   signUp(input: { name: string; email: string; password: string }): Promise<AuthUser>;
   signIn(input: { email: string; password: string }): Promise<AuthUser>;
   signOut(): Promise<void>;
+  sendPasswordResetEmail(email: string): Promise<void>;
   onAuthStateChanged(callback: (user: AuthUser | null) => void): () => void;
 }
 
@@ -137,6 +139,13 @@ export const authService: AuthService = {
       await firebaseSignOut(getFirebaseAuth()).catch(() => undefined);
     }
     await remove(SESSION_KEY);
+  },
+
+  async sendPasswordResetEmail(email) {
+    if (!isFirebaseConfigured) {
+      throw new Error('Password reset is only available when Firebase is configured.');
+    }
+    await firebaseSendPasswordReset(getFirebaseAuth(), normalizeEmail(email));
   },
 
   onAuthStateChanged(callback) {

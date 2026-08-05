@@ -12,6 +12,7 @@ import { Stepper } from '@/features/onboarding/components/stepper';
 import { SelectableOption } from '@/features/onboarding/components/selectable-option';
 import { useCompleteOnboarding, useProfile } from '@/hooks/use-profile';
 import { useAuthStore } from '@/store/auth.store';
+import { authService } from '@/services/auth.service';
 import type { ActivityLevel, Gender, GoalType } from '@/types/user';
 import { ACTIVITY_LEVELS, defaultDailyGoals } from '@/types/user';
 import { useTheme } from '@/hooks/use-theme';
@@ -94,6 +95,12 @@ export default function OnboardingScreen() {
     router.replace('/(tabs)');
   };
 
+  const handleSignOut = async () => {
+    await authService.signOut();
+    useAuthStore.getState().setUser(null);
+    router.replace('/');
+  };
+
   const title = useMemo(() => {
     switch (step) {
       case 0: return 'Let’s get to know you';
@@ -117,7 +124,9 @@ export default function OnboardingScreen() {
           <PressableScale onPress={() => setStep(step - 1)} className="h-8 w-8 items-center justify-center rounded-full bg-surface dark:bg-neutral-900">
             <Text variant="headline" className="text-ink dark:text-neutral-50">‹</Text>
           </PressableScale>
-        ) : <View className="w-8" />}
+        ) : <PressableScale onPress={handleSignOut} className="h-8 w-8 items-center justify-center rounded-full bg-surface dark:bg-neutral-900">
+          <Text variant="headline" className="text-neutral-400">✕</Text>
+        </PressableScale>}
         <View className="flex-1">
           <Stepper step={step} total={STEPS} />
         </View>

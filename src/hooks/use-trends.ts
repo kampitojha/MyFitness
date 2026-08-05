@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useAllMealsSummary } from './use-meals';
 import { useWaterSeries, useWeightSeries } from './use-tracker';
 import type { TimeRange } from '@/types/progress';
-import { lastNDays, toISODate, formatMonth, monthKey } from '@/utils/date';
+import { lastNDays, toISODate, formatMonth, monthKey, startOfWeek } from '@/utils/date';
 
 export interface TrendDatum {
   date: string;
@@ -55,7 +55,40 @@ export function useTrends(range: TimeRange): TrendDatum[] {
       }));
     }
 
-    // Monthly aggregation
+    if (range === 'month') {
+      // Aggregates a 30-day month view into weekly buckets (~5 bars) so the
+      // chart stays readable instead of collapsing to a single bar.
+      const weekBuckets = new Map<string, TrendDatum & { _protein: number }>();
+      for (const d of daily) {
+        const sOW = startOfWeek(d.date);
+        const prev = weekBuckets.get(sOW);
+        if (prev) {
+          prev._protein += d.protein;
+          prev.calories += d.calories;
+          prev.waterMl += d.waterMl;
+          if (d.weightKg !== undefined) prev.weightKg = d.weightKg;
+        } else {
+          weekBuckets.set(sOW, {
+            date: sOW,
+            label: formatMonth(sOW),
+            calories: d.calories,
+            _protein: d.protein,
+            protein: 0,
+            waterMl: d.waterMl,
+            weightKg: d.weightKg,
+            weightLabel: d.weightKg !== undefined ? formatMonth(sOW) : undefined,
+          });
+        }
+      }
+      const weekList = [...weekBuckets.values()];
+      weekList.forEach((b) => {
+        b.protein = b._protein;
+        delete (b as Partial<TrendDatum & { _protein: number }>)._protein;
+      });
+      return weekList;
+    }
+
+    // Yearly aggregation into calendar months
     const buckets = new Map<string, TrendDatum & { _protein: number }>();
     for (const d of daily) {
       const key = monthKey(d.date);

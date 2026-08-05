@@ -13,6 +13,7 @@ import { MacroRing } from '@/components/ui/macro-ring';
 import { Spinner } from '@/components/ui/spinner';
 import { ErrorState } from '@/components/ui/error-state';
 import { useMeal, useDeleteMeal } from '@/hooks/use-meals';
+import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { formatLong } from '@/utils/date';
 import type { FoodItem } from '@/types/food';
@@ -24,6 +25,9 @@ export default function MealDetailScreen() {
 
   const { data: meal, isLoading, isError, refetch } = useMeal(id || '');
   const deleteMealMutation = useDeleteMeal();
+  const { data: profile } = useProfile();
+  const goalCalories = profile?.dailyGoals?.calories ?? 2000;
+  const ringValue = Math.min(100, Math.round(((meal?.macros.calories ?? 0) / goalCalories) * 100));
 
   const handleDelete = () => {
     if (!id) return;
@@ -95,11 +99,11 @@ export default function MealDetailScreen() {
                 {macros.calories}
               </Text>
               <Text variant="bodySmall" color="secondary">
-                Total Calories (kcal)
+                {ringValue}% of daily goal
               </Text>
             </View>
 
-            <MacroRing value={Math.min(100, Math.round((macros.calories / 800) * 100))} size={80} strokeWidth={8} color={colors.primary} />
+            <MacroRing value={ringValue} size={80} strokeWidth={8} color={colors.primary} />
           </View>
 
           <Divider className="my-4" />
