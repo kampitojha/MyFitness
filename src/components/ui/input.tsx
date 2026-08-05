@@ -31,7 +31,7 @@ export const Input = forwardRef<TextInput, InputProps>(
             'h-13 flex-row items-center rounded-2xl border bg-surface px-4 shadow-sm dark:bg-neutral-800',
             hasError
               ? 'border-danger'
-              : 'border-border focus:border-primary-600 dark:border-neutral-700 dark:focus:border-emerald-400',
+              : 'border-border focus:border-primary-600 dark:border-neutral-700 dark:focus:border-sky-400',
           )}
         >
           {leftIcon ? <View className="mr-2.5 opacity-60">{leftIcon}</View> : null}

@@ -83,13 +83,13 @@ export function TabBar({ state, navigation }: TabBarProps) {
                       navigation.navigate(route.name);
                     }
                   }}
-                  className="-mt-7 h-14 w-14 items-center justify-center rounded-full bg-primary-600 shadow-xl shadow-primary-600/40 ring-4 ring-surface dark:bg-emerald-500 dark:shadow-emerald-500/30 dark:ring-neutral-900"
+                  className="-mt-7 h-14 w-14 items-center justify-center rounded-full bg-primary-600 shadow-xl shadow-primary-600/40 ring-4 ring-surface dark:bg-sky-500 dark:shadow-sky-500/30 dark:ring-neutral-900"
                 >
                   <Icon size={24} color="#FFFFFF" strokeWidth={2.4} />
                 </PressableScale>
                 <Text
                   variant="caption2"
-                  className="mt-1 text-[10px] font-semibold text-primary-600 dark:text-emerald-400"
+                  className="mt-1 text-[10px] font-semibold text-primary-600 dark:text-sky-400"
                 >
                   {label}
                 </Text>
@@ -117,7 +117,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
             >
               <View
                 className={`items-center justify-center rounded-2xl px-3 py-1 ${
-                  isFocused ? 'bg-primary-500/10 dark:bg-emerald-500/20' : 'bg-transparent'
+                  isFocused ? 'bg-primary-500/10 dark:bg-sky-500/20' : 'bg-transparent'
                 }`}
               >
                 <Icon
@@ -129,7 +129,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
                   variant="caption2"
                   className={`mt-0.5 text-[10px] ${
                     isFocused
-                      ? 'font-bold text-primary-600 dark:text-emerald-400'
+                      ? 'font-bold text-primary-600 dark:text-sky-400'
                       : 'font-normal text-text-muted dark:text-neutral-400'
                   }`}
                 >

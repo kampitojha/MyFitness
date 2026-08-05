@@ -7,11 +7,11 @@ export async function generateWeeklyReportPDF(): Promise<void> {
         <title>NutraScan Weekly Fitness & Nutrition Report</title>
         <style>
           body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 30px; color: #1e293b; }
-          h1 { color: #0e7a4a; margin-bottom: 5px; }
+          h1 { color: #0284C7; margin-bottom: 5px; }
           .header { border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; }
           .stat-grid { display: flex; gap: 15px; margin-bottom: 25px; }
           .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; flex: 1; text-align: center; }
-          .stat-value { font-size: 24px; font-weight: bold; color: #0e7a4a; margin-top: 5px; }
+          .stat-value { font-size: 24px; font-weight: bold; color: #0284C7; margin-top: 5px; }
           .footer { margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 12px; color: #64748b; text-align: center; }
         </style>
       </head>

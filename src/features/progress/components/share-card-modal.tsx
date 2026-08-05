@@ -29,7 +29,7 @@ export function ShareCardModal({ visible, onClose }: ShareCardModalProps) {
   return (
     <BottomSheet visible={visible} onClose={onClose} title="Share daily progress story" snapTo={0.8}>
       {/* Story Card Container */}
-      <View className="mb-5 overflow-hidden rounded-[28px] bg-gradient-to-br from-primary-700 via-primary-600 to-emerald-800 p-6 shadow-2xl dark:from-neutral-900 dark:to-neutral-950">
+      <View className="mb-5 overflow-hidden rounded-[28px] bg-gradient-to-br from-primary-700 via-primary-600 to-sky-800 p-6 shadow-2xl dark:from-neutral-900 dark:to-neutral-950">
         <View className="flex-row items-center justify-between mb-4">
           <View>
             <Text variant="caption" className="text-white/80 uppercase tracking-widest font-semibold">

@@ -83,9 +83,9 @@ export function AICoachSheet({ visible, onClose }: AICoachSheetProps) {
 
   return (
     <BottomSheet visible={visible} onClose={onClose} title="AI Nutritionist Coach" snapTo={0.85}>
-      <View className="mb-3 flex-row items-center gap-2 rounded-2xl bg-primary-soft p-3 dark:bg-emerald-950">
-        <Sparkles size={20} color="#0E7A4A" />
-        <Text variant="caption" weight="medium" className="flex-1 text-primary-softText dark:text-emerald-300">
+      <View className="mb-3 flex-row items-center gap-2 rounded-2xl bg-primary-soft p-3 dark:bg-sky-950">
+        <Sparkles size={20} color="#0284C7" />
+        <Text variant="caption" weight="medium" className="flex-1 text-primary-softText dark:text-sky-300">
           Personalized advice based on your remaining {remCalories} kcal & {remProtein}g protein.
         </Text>
       </View>
@@ -104,7 +104,7 @@ export function AICoachSheet({ visible, onClose }: AICoachSheetProps) {
             key={msg.id}
             className={`p-3.5 rounded-2xl mb-2 max-w-[85%] ${
               msg.sender === 'user'
-                ? 'self-end bg-primary-600 dark:bg-emerald-500'
+                ? 'self-end bg-primary-600 dark:bg-sky-500'
                 : 'self-start bg-surface-alt dark:bg-neutral-800'
             }`}
           >
@@ -118,7 +118,7 @@ export function AICoachSheet({ visible, onClose }: AICoachSheetProps) {
         ))}
         {thinking ? (
           <View className="self-start bg-surface-alt p-3 rounded-2xl dark:bg-neutral-800 flex-row items-center gap-2">
-            <Sparkles size={16} color="#0E7A4A" className="animate-spin" />
+            <Sparkles size={16} color="#0284C7" className="animate-spin" />
             <Text variant="caption" color="muted">AI is thinking…</Text>
           </View>
         ) : null}
@@ -138,7 +138,7 @@ export function AICoachSheet({ visible, onClose }: AICoachSheetProps) {
           variant="surface"
           label="Send message"
           onPress={() => handleSend()}
-          icon={<Send size={18} color="#0E7A4A" />}
+          icon={<Send size={18} color="#0284C7" />}
         />
       </View>
     </BottomSheet>

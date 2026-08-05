@@ -43,7 +43,7 @@ export function MealRow({ meal, onPress, showImage = true }: MealRowProps) {
           </Text>
         </View>
         <View className="mt-0.5 flex-row items-center gap-2.5">
-          <Text variant="footnote" weight="semibold" className="text-primary-600 dark:text-emerald-400">
+          <Text variant="footnote" weight="semibold" className="text-primary-600 dark:text-sky-400">
             {formatNumber(meal.macros.calories)} kcal
           </Text>
           <Text variant="caption" color="muted">

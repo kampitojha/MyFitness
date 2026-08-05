@@ -30,9 +30,9 @@ export function Stepper({ step, total, onStepPress }: StepperProps) {
               className={cn(
                 'h-2.5 flex-1 overflow-hidden rounded-full transition-all',
                 isComplete
-                  ? 'bg-primary-600 dark:bg-emerald-400'
+                  ? 'bg-primary-600 dark:bg-sky-400'
                   : isActive
-                  ? 'bg-primary-200 dark:bg-emerald-900'
+                  ? 'bg-primary-200 dark:bg-sky-900'
                   : 'bg-neutral-200 dark:bg-neutral-800'
               )}
             >
@@ -53,7 +53,7 @@ function StepFill() {
   return (
     <Animated.View
       style={[{ width: '0%' }, animatedStyle]}
-      className="h-full rounded-full bg-primary-600 dark:bg-emerald-400"
+      className="h-full rounded-full bg-primary-600 dark:bg-sky-400"
     />
   );
 }

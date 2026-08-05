@@ -75,7 +75,7 @@ export function SupplementModal({ visible, onClose }: SupplementModalProps) {
               <Card
                 key={sup.id}
                 className={`p-3.5 flex-row items-center justify-between border ${
-                  isTaken ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-surface dark:bg-neutral-900 border-border/60'
+                  isTaken ? 'bg-sky-500/10 border-sky-500/30' : 'bg-surface dark:bg-neutral-900 border-border/60'
                 }`}
               >
                 <PressableScale
@@ -84,7 +84,7 @@ export function SupplementModal({ visible, onClose }: SupplementModalProps) {
                 >
                   <View
                     className={`h-9 w-9 rounded-full items-center justify-center ${
-                      isTaken ? 'bg-emerald-500' : 'bg-surface-alt dark:bg-neutral-800'
+                      isTaken ? 'bg-sky-500' : 'bg-surface-alt dark:bg-neutral-800'
                     }`}
                   >
                     {isTaken ? <Check size={18} color="#FFFFFF" /> : <Pill size={18} color={colors.textMuted} />}
@@ -117,7 +117,7 @@ export function SupplementModal({ visible, onClose }: SupplementModalProps) {
             label="Add Custom Supplement"
             variant="soft"
             onPress={() => setShowAddForm(true)}
-            icon={<Plus size={16} color="#0E7A4A" />}
+            icon={<Plus size={16} color="#0284C7" />}
             fullWidth
             className="mb-3"
           />

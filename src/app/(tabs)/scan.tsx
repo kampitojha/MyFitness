@@ -179,7 +179,7 @@ export default function ScanScreen() {
                   </Text>
                   <PressableScale
                     onPress={() => requestPermission()}
-                    className="px-6 py-3.5 rounded-full bg-primary-600 dark:bg-emerald-500 shadow-lg shadow-emerald-500/30"
+                    className="px-6 py-3.5 rounded-full bg-primary-600 dark:bg-sky-500 shadow-lg shadow-sky-500/30"
                   >
                     <Text variant="subhead" weight="bold" className="text-white">
                       Grant Camera Permission
@@ -269,10 +269,10 @@ export default function ScanScreen() {
                   onPress={onCapture}
                   accessibilityRole="button"
                   accessibilityLabel="Click Photo"
-                  className="h-20 w-20 items-center justify-center rounded-full bg-primary-500/20 border-4 border-white shadow-2xl ring-4 ring-emerald-500/40"
+                  className="h-20 w-20 items-center justify-center rounded-full bg-primary-500/20 border-4 border-white shadow-2xl ring-4 ring-sky-500/40"
                 >
                   <View className="h-16 w-16 rounded-full bg-white items-center justify-center shadow-inner">
-                    <Camera size={26} color="#0E7A4A" />
+                    <Camera size={26} color="#0284C7" />
                   </View>
                 </PressableScale>
 
@@ -301,7 +301,7 @@ export default function ScanScreen() {
                 variant="primary"
                 onPress={onAnalyze}
                 icon={<ScanLine size={18} color="#FFFFFF" />}
-                className="flex-[2] bg-primary-600 dark:bg-emerald-500"
+                className="flex-[2] bg-primary-600 dark:bg-sky-500"
               />
             </View>
           ) : phase === 'processing' ? (
@@ -355,11 +355,11 @@ export default function ScanScreen() {
             ))}
           </View>
 
-          <View className="mt-4 flex-row items-center justify-between rounded-2xl bg-primary-soft px-4 py-3.5 dark:bg-emerald-900/80 border border-primary-500/20">
-            <Text variant="subhead" weight="bold" className="text-primary-softText dark:text-emerald-200">
+          <View className="mt-4 flex-row items-center justify-between rounded-2xl bg-primary-soft px-4 py-3.5 dark:bg-sky-900/80 border border-primary-500/20">
+            <Text variant="subhead" weight="bold" className="text-primary-softText dark:text-sky-200">
               Total Macros
             </Text>
-            <Text variant="subhead" weight="bold" className="text-primary-softText dark:text-emerald-200">
+            <Text variant="subhead" weight="bold" className="text-primary-softText dark:text-sky-200">
               {formatNumber(total.calories)} kcal · P {formatNumber(total.protein)}g · C {formatNumber(total.carbs)}g · F {formatNumber(total.fat)}g
             </Text>
           </View>
@@ -369,7 +369,7 @@ export default function ScanScreen() {
             onPress={onSave}
             size="lg"
             fullWidth
-            className="mt-5 bg-primary-600 dark:bg-emerald-500"
+            className="mt-5 bg-primary-600 dark:bg-sky-500"
             loading={saving}
             icon={<Check size={18} color="#FFFFFF" />}
             disabled={detectedFoods.length === 0}
@@ -382,8 +382,8 @@ export default function ScanScreen() {
 
 function MotiPulse() {
   return (
-    <View className="mb-4 h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/40">
-      <View className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-400/30 border-t-emerald-400" />
+    <View className="mb-4 h-16 w-16 items-center justify-center rounded-full bg-sky-500/20 border border-sky-500/40">
+      <View className="h-10 w-10 animate-spin rounded-full border-4 border-sky-400/30 border-t-sky-400" />
     </View>
   );
 }

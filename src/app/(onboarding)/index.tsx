@@ -28,7 +28,7 @@ const STEP_LABELS = [
 ];
 
 const GOAL_OPTIONS: { value: GoalType; label: string; description: string; icon: React.ReactNode }[] = [
-  { value: 'lose', label: 'Lose weight', description: 'Create a healthy calorie deficit', icon: <TrendingDown size={20} color="#0E7A4A" /> },
+  { value: 'lose', label: 'Lose weight', description: 'Create a healthy calorie deficit', icon: <TrendingDown size={20} color="#0284C7" /> },
   { value: 'maintain', label: 'Maintain weight', description: 'Keep your current weight steady', icon: <Minus size={20} color="#0EA5E9" /> },
   { value: 'gain', label: 'Build muscle', description: 'Gain mass with a surplus', icon: <TrendingUp size={20} color="#8B5CF6" /> },
 ];
@@ -149,7 +149,7 @@ export default function OnboardingScreen() {
 
           <PressableScale
             onPress={finishAndGoHome}
-            className="px-3 py-1.5 rounded-full bg-primary-600 dark:bg-emerald-500 shadow-sm"
+            className="px-3 py-1.5 rounded-full bg-primary-600 dark:bg-sky-500 shadow-sm"
           >
             <Text variant="caption2" weight="bold" className="text-white">
               Home 🏠
@@ -172,9 +172,9 @@ export default function OnboardingScreen() {
                 onPress={() => setStep(idx)}
                 className={`flex-row items-center gap-1 px-3 py-1.5 rounded-full border ${
                   isCurrent
-                    ? 'border-primary-600 bg-primary-600 dark:border-emerald-400 dark:bg-emerald-500'
+                    ? 'border-primary-600 bg-primary-600 dark:border-sky-400 dark:bg-sky-500'
                     : isPast
-                    ? 'border-primary-500/30 bg-primary-500/10 dark:bg-emerald-950/40'
+                    ? 'border-primary-500/30 bg-primary-500/10 dark:bg-sky-950/40'
                     : 'border-border/60 bg-surface dark:bg-neutral-900'
                 }`}
               >
@@ -186,7 +186,7 @@ export default function OnboardingScreen() {
                     isCurrent
                       ? 'text-white'
                       : isPast
-                      ? 'text-primary-600 dark:text-emerald-400'
+                      ? 'text-primary-600 dark:text-sky-400'
                       : 'text-text-muted dark:text-neutral-400'
                   }
                 >
@@ -323,10 +323,10 @@ export default function OnboardingScreen() {
 
           {step === 5 && (
             <View className="gap-4">
-              <View className="rounded-3xl bg-primary-soft p-5 dark:bg-emerald-950/80 border border-primary-500/20">
+              <View className="rounded-3xl bg-primary-soft p-5 dark:bg-sky-950/80 border border-primary-500/20">
                 <View className="flex-row items-center gap-2">
                   <Sparkles size={20} color={colors.primary} />
-                  <Text variant="subhead" weight="bold" className="text-primary-softText dark:text-emerald-200">
+                  <Text variant="subhead" weight="bold" className="text-primary-softText dark:text-sky-200">
                     Your calculated targets
                   </Text>
                 </View>
@@ -384,10 +384,10 @@ export default function OnboardingScreen() {
 function PlanStat({ label, value }: { label: string; value: string }) {
   return (
     <View className="items-center">
-      <Text variant="headline" weight="bold" className="text-primary-softText dark:text-emerald-200">
+      <Text variant="headline" weight="bold" className="text-primary-softText dark:text-sky-200">
         {value}
       </Text>
-      <Text variant="caption2" className="text-primary-softText/70 dark:text-emerald-200/70">
+      <Text variant="caption2" className="text-primary-softText/70 dark:text-sky-200/70">
         {label}
       </Text>
     </View>

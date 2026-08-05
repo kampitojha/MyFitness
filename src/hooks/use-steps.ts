@@ -54,4 +54,4 @@ export function useStepCounter(): StepData {
 }
 
 export const STEP_GOAL = 10000;
-export const STEP_COLORS = { low: '#F97316', mid: '#FBBF24', high: '#0E7A4A' };
+export const STEP_COLORS = { low: '#F97316', mid: '#FBBF24', high: '#0284C7' };

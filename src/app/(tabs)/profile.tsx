@@ -88,14 +88,14 @@ export default function ProfileScreen() {
           variant="soft"
           size="sm"
           onPress={() => router.push('/edit-profile')}
-          icon={<Pencil size={14} color="#0E7A4A" />}
+          icon={<Pencil size={14} color="#0284C7" />}
         />
       </View>
 
       <View className="mb-5 flex-row gap-3">
-        <StatBlock label="Current" value={`${formatNumber(profile?.weightKg ?? 0, 1)} kg`} icon={<Scale size={16} color="#0E7A4A" />} />
-        <StatBlock label="Target" value={`${formatNumber(profile?.targetWeightKg ?? 0, 1)} kg`} icon={<Target size={16} color="#0E7A4A" />} />
-        <StatBlock label="Height" value={`${formatNumber(profile?.heightCm ?? 0)} cm`} icon={<Ruler size={16} color="#0E7A4A" />} />
+        <StatBlock label="Current" value={`${formatNumber(profile?.weightKg ?? 0, 1)} kg`} icon={<Scale size={16} color="#0284C7" />} />
+        <StatBlock label="Target" value={`${formatNumber(profile?.targetWeightKg ?? 0, 1)} kg`} icon={<Target size={16} color="#0284C7" />} />
+        <StatBlock label="Height" value={`${formatNumber(profile?.heightCm ?? 0)} cm`} icon={<Ruler size={16} color="#0284C7" />} />
       </View>
 
       <Text variant="title3" className="mb-3 text-ink dark:text-neutral-50">
@@ -104,19 +104,19 @@ export default function ProfileScreen() {
       <View className="mb-5">
         <SettingsRow
           label="Log today’s weight"
-          icon={<WeightIcon size={18} color="#0E7A4A" />}
+          icon={<WeightIcon size={18} color="#0284C7" />}
           value={todayWeight ? `${formatNumber(todayWeight.weightKg, 1)} kg` : undefined}
           onPress={() => { setWeightInput(profile?.weightKg?.toString() ?? ''); setWeightOpen(true); }}
         />
         <SettingsRow
           label="Daily goals"
-          icon={<Target size={18} color="#0E7A4A" />}
+          icon={<Target size={18} color="#0284C7" />}
           value={goals ? `${formatNumber(goals.calories)} kcal` : undefined}
           onPress={() => setGoalsOpen(true)}
         />
         <SettingsRow
           label="Edit profile & body details"
-          icon={<Pencil size={18} color="#0E7A4A" />}
+          icon={<Pencil size={18} color="#0284C7" />}
           onPress={() => router.push('/edit-profile')}
         />
       </View>
@@ -127,7 +127,7 @@ export default function ProfileScreen() {
       <View className="mb-5 rounded-2xl bg-surface p-4 shadow-sm dark:bg-neutral-900">
         <View className="mb-3 flex-row items-center gap-3">
           <View className="h-9 w-9 items-center justify-center rounded-xl bg-surface-alt dark:bg-neutral-800">
-            <Settings size={18} color="#0E7A4A" />
+            <Settings size={18} color="#0284C7" />
           </View>
           <Text variant="body" weight="medium">
             Appearance
@@ -138,19 +138,19 @@ export default function ProfileScreen() {
 
       <SettingsRow
         label="Haptics"
-        icon={<Zap size={18} color="#0E7A4A" />}
+        icon={<Zap size={18} color="#0284C7" />}
         switchValue={haptics}
         onSwitchChange={setHapticsEnabled}
       />
       <SettingsRow
         label="Notifications"
-        icon={<Bell size={18} color="#0E7A4A" />}
+        icon={<Bell size={18} color="#0284C7" />}
         switchValue={notifications}
         onSwitchChange={setNotificationsEnabled}
       />
       <SettingsRow
         label="Privacy"
-        icon={<ShieldCheck size={18} color="#0E7A4A" />}
+        icon={<ShieldCheck size={18} color="#0284C7" />}
       />
 
       <Text variant="title3" className="mb-3 mt-5 text-ink dark:text-neutral-50">
@@ -158,11 +158,11 @@ export default function ProfileScreen() {
       </Text>
       <SettingsRow
         label="Help & FAQ"
-        icon={<CircleHelp size={18} color="#0E7A4A" />}
+        icon={<CircleHelp size={18} color="#0284C7" />}
       />
       <SettingsRow
         label="Send feedback"
-        icon={<MessageSquareText size={18} color="#0E7A4A" />}
+        icon={<MessageSquareText size={18} color="#0284C7" />}
       />
       <SettingsRow
         label="Upgrade to Premium"
