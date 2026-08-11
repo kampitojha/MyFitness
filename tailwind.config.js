@@ -6,37 +6,37 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#0E7A4A',
-          50: '#ECFBF3',
-          100: '#D3F6E2',
-          200: '#A6EBC5',
-          300: '#6FDCA4',
-          400: '#38C882',
-          500: '#12A964',
-          600: '#0E7A4A',
-          700: '#0C623C',
-          800: '#0A4E31',
-          900: '#083F28',
-          950: '#042519',
-          soft: '#ECFBF3',
-          softText: '#0C623C',
+          DEFAULT: '#22C55E', // Vibrant Neon Green
+          50: '#F0FDF4',
+          100: '#DCFCE7',
+          200: '#BBF7D0',
+          300: '#86EFAC',
+          400: '#4ADE80',
+          500: '#22C55E',
+          600: '#16A34A',
+          700: '#15803D',
+          800: '#166534',
+          900: '#14532D',
+          950: '#052E16',
+          soft: '#DCFCE7',
+          softText: '#166534',
         },
         accent: {
-          DEFAULT: '#DCFCE7',
+          DEFAULT: '#C0FF00', // Apple Fitness style neon yellow-green
         },
         background: {
-          DEFAULT: '#F6F7F8',
-          dark: '#0B0D0E',
+          DEFAULT: '#F2F2F7', // iOS light grey
+          dark: '#000000', // Pure black for OLED
         },
         surface: {
           DEFAULT: '#FFFFFF',
-          dark: '#14181A',
-          alt: '#EFF1F3',
+          dark: '#1C1C1E', // iOS dark elevated surface
+          alt: '#E5E5EA',
         },
         ink: {
-          DEFAULT: '#101311',
-          secondary: '#5E6570',
-          muted: '#8A9099',
+          DEFAULT: '#000000',
+          secondary: '#3A3A3C',
+          muted: '#8E8E93',
         },
         border: '#E2E5E9',
         success: '#16A34A',

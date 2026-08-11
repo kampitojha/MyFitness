@@ -58,7 +58,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
       style={{ paddingBottom: insets.bottom + (Platform.OS === 'android' ? 8 : 0) }}
     >
       <View
-        className="mx-5 flex-row items-center justify-between rounded-[26px] border border-border/60 bg-surface/95 px-2 py-2 shadow-lg backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/95"
+        className="mx-5 mb-2 flex-row items-center justify-between rounded-full border border-black/5 bg-surface/90 px-2 py-1 shadow-lg shadow-black/10 backdrop-blur-md dark:border-white/5 dark:bg-[#1A1A1C]/90"
       >
         {routes.map((route, index) => {
           const key = route.name as TabKey;
@@ -83,39 +83,41 @@ export function TabBar({ state, navigation }: TabBarProps) {
                       navigation.navigate(route.name);
                     }
                   }}
-                  className="-mt-7 h-14 w-14 items-center justify-center rounded-full bg-primary-600 shadow-lg shadow-primary-600/30 dark:bg-emerald-400"
                 >
-                  <Icon size={26} color={colors.onPrimary} strokeWidth={2.2} />
+                  <View className="-mt-7 h-14 w-14 items-center justify-center rounded-full bg-primary-600 shadow-xl shadow-primary-500/30 dark:bg-primary-500">
+                    <Icon size={26} color="#FFFFFF" strokeWidth={2.2} />
+                  </View>
                 </PressableScale>
               </View>
             );
           }
 
           return (
-            <PressableScale
-              key={route.key}
-              accessibilityRole="tab"
-              accessibilityState={{ selected: isFocused }}
-              accessibilityLabel={TAB_LABELS[key]}
-              onPress={() => {
-                const event = navigation.emit({
-                  type: 'tabPress',
-                  target: route.key,
-                  canPreventDefault: true,
-                });
-                if (!isFocused && !event.defaultPrevented) {
-                  navigation.navigate(route.name);
-                }
-              }}
-              className="flex-1 items-center justify-center"
-              style={{ height: 56 }}
-            >
-              <Icon
-                size={isFocused ? 23 : 22}
-                color={isFocused ? colors.primary : colors.textMuted}
-                strokeWidth={isFocused ? 2.4 : 2}
-              />
-            </PressableScale>
+            <View key={route.key} className="flex-1 items-center justify-center">
+              <PressableScale
+                accessibilityRole="tab"
+                accessibilityState={{ selected: isFocused }}
+                accessibilityLabel={TAB_LABELS[key]}
+                onPress={() => {
+                  const event = navigation.emit({
+                    type: 'tabPress',
+                    target: route.key,
+                    canPreventDefault: true,
+                  });
+                  if (!isFocused && !event.defaultPrevented) {
+                    navigation.navigate(route.name);
+                  }
+                }}
+                className="items-center justify-center p-2"
+                style={{ height: 56, width: 56 }}
+              >
+                <Icon
+                  size={isFocused ? 23 : 22}
+                  color={isFocused ? colors.primary : colors.textMuted}
+                  strokeWidth={isFocused ? 2.4 : 2}
+                />
+              </PressableScale>
+            </View>
           );
         })}
       </View>

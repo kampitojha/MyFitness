@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import { Flame } from 'lucide-react-native';
 import { MacroRing } from '@/components/ui/macro-ring';
 import { Text } from '@/components/ui/text';
+import { Card } from '@/components/ui/card';
 import { AnimatedNumber } from '@/components/ui/animated-number';
 import type { DailyGoals } from '@/types/user';
 import type { Macros } from '@/types/nutrition';
@@ -28,7 +29,7 @@ export function CaloriesCard({ consumed, goals, burnedCalories = 0 }: CaloriesCa
   });
 
   return (
-    <View className="rounded-3xl bg-surface p-5 shadow-sm dark:bg-neutral-900">
+    <Card className="items-center">
       <View className="items-center">
         <MacroRing value={pct * 100} size={196} strokeWidth={16} color={MACRO_COLORS.calories}>
           <View className="items-center">
@@ -92,6 +93,6 @@ export function CaloriesCard({ consumed, goals, burnedCalories = 0 }: CaloriesCa
           );
         })}
       </View>
-    </View>
+    </Card>
   );
 }

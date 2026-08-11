@@ -22,6 +22,7 @@ import { SupplementModal } from '@/features/supplements/components/supplement-mo
 import { SleepLogModal } from '@/features/sleep/components/sleep-log-modal';
 
 import { useProfile } from '@/hooks/use-profile';
+import { useTheme } from '@/hooks/use-theme';
 import { useDailyTotals, useMealsForDate } from '@/hooks/use-meals';
 import { useWaterTotal, useAddWater } from '@/hooks/use-tracker';
 import { useWorkoutBurnForDate } from '@/hooks/use-workouts';
@@ -39,6 +40,7 @@ function greeting(date = new Date()): string {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { colors } = useTheme();
   const today = toISODate();
 
   const { data: profile } = useProfile();
@@ -99,7 +101,7 @@ export default function HomeScreen() {
             variant="surface"
             label="AI Coach Assistant"
             onPress={() => setAiCoachOpen(true)}
-            icon={<Sparkles size={20} color="#0E7A4A" />}
+            icon={<Sparkles size={20} color={colors.primary} />}
           />
           <PressableScale onPress={() => router.push('/profile')}>
             <Avatar name={profile?.name} size={44} />
@@ -113,34 +115,46 @@ export default function HomeScreen() {
             label="Complete your profile"
             onPress={() => router.push('/(onboarding)')}
             variant="soft"
-            icon={<Flame size={18} color="#0E7A4A" />}
+            icon={<Flame size={18} color={colors.primary} />}
           />
         </View>
       ) : null}
 
-      {/* Quick Action Toolbar */}
-      <View className="mb-4 flex-row gap-2.5">
+      {/* Hero Section */}
+      <View className="mb-5">
+        <CaloriesCard consumed={macros} goals={goals} burnedCalories={workoutBurn ?? 0} />
+      </View>
+
+      {/* Quick Action Toolbar - Moved below Calories */}
+      <View className="mb-6 flex-row gap-3">
         <Button
           label="Search Food"
           variant="soft"
           size="sm"
-          className="flex-1"
+          className="flex-1 rounded-[20px]"
           onPress={() => setFoodSearchOpen(true)}
-          icon={<Search size={16} color="#0E7A4A" />}
+          icon={<Search size={16} color={colors.primary} />}
         />
         <Button
           label="Log Workout"
           variant="soft"
           size="sm"
-          className="flex-1"
+          className="flex-1 rounded-[20px]"
           onPress={() => setWorkoutOpen(true)}
-          icon={<Dumbbell size={16} color="#0E7A4A" />}
+          icon={<Dumbbell size={16} color={colors.primary} />}
         />
       </View>
 
-      <View className="gap-4">
-        <CaloriesCard consumed={macros} goals={goals} burnedCalories={workoutBurn ?? 0} />
+      <View className="gap-5">
+        {/* Meals Section naturally follows Quick Actions */}
+        <MealsSection
+          meals={meals ?? []}
+          loading={mealsLoading}
+          emptyActionLabel="Scan or search food"
+          emptyActionOnPress={() => setFoodSearchOpen(true)}
+        />
 
+        {/* Secondary Trackers */}
         <WaterCard
           consumedMl={waterTotal.data ?? 0}
           targetMl={goals.waterMl}
@@ -154,13 +168,6 @@ export default function HomeScreen() {
         />
 
         <InsightCard title={insight.title} message={insight.message} />
-
-        <MealsSection
-          meals={meals ?? []}
-          loading={mealsLoading}
-          emptyActionLabel="Scan or search food"
-          emptyActionOnPress={() => setFoodSearchOpen(true)}
-        />
       </View>
 
       {/* Modals & Sheets */}

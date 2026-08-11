@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { Camera } from 'lucide-react-native';
 import { Text } from '@/components/ui/text';
+import { Card } from '@/components/ui/card';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Divider } from '@/components/ui/divider';
@@ -9,6 +10,7 @@ import { MealRow } from '@/features/meals/components/meal-row';
 import type { Meal , MealType } from '@/types/meals';
 import { MEAL_TYPES, MEAL_TYPE_LABELS } from '@/types/meals';
 import { useRouter } from 'expo-router';
+import { useTheme } from '@/hooks/use-theme';
 
 export interface MealsSectionProps {
   meals: Meal[];
@@ -19,6 +21,7 @@ export interface MealsSectionProps {
 
 export function MealsSection({ meals, loading, emptyActionLabel, emptyActionOnPress }: MealsSectionProps) {
   const router = useRouter();
+  const { colors } = useTheme();
 
   if (loading) {
     return (
@@ -38,7 +41,7 @@ export function MealsSection({ meals, loading, emptyActionLabel, emptyActionOnPr
   if (grouped.length === 0) {
     return (
       <EmptyState
-        icon={<Camera size={26} color="#0E7A4A" />}
+        icon={<Camera size={26} color={colors.primary} />}
         title="No meals logged yet"
         description="Scan your first meal to start tracking nutrition in seconds."
         actionLabel={emptyActionLabel}
@@ -48,7 +51,7 @@ export function MealsSection({ meals, loading, emptyActionLabel, emptyActionOnPr
   }
 
   return (
-    <View className="rounded-3xl bg-surface p-5 shadow-sm dark:bg-neutral-900">
+    <Card>
       {grouped.map(({ type, items }, sectionIndex) => (
         <View key={type}>
           <View className="mb-3 flex-row items-center justify-between">
@@ -79,6 +82,6 @@ export function MealsSection({ meals, loading, emptyActionLabel, emptyActionOnPr
         className="mt-5"
         fullWidth
       />
-    </View>
+    </Card>
   );
 }

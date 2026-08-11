@@ -5,12 +5,14 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { springs } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export interface PressableScaleProps extends PressableProps {
   scaleTo?: number;
+  hapticFeedback?: boolean;
   children?: React.ReactNode;
 }
 
@@ -19,7 +21,7 @@ export interface PressableScaleProps extends PressableProps {
  * in the app should compose on top of this for consistent feedback.
  */
 export const PressableScale = forwardRef<View, PressableScaleProps>(
-  ({ scaleTo = 0.97, onPressIn, onPressOut, children, style, ...props }, ref) => {
+  ({ scaleTo = 0.97, hapticFeedback = true, onPressIn, onPressOut, children, style, ...props }, ref) => {
     const scale = useSharedValue(1);
 
     const animatedStyle = useAnimatedStyle(() => ({
@@ -31,6 +33,9 @@ export const PressableScale = forwardRef<View, PressableScaleProps>(
         ref={ref}
         accessibilityRole={props.accessibilityRole ?? 'button'}
         onPressIn={(e) => {
+          if (hapticFeedback) {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }
           scale.value = withSpring(scaleTo, springs.snappy);
           onPressIn?.(e);
         }}

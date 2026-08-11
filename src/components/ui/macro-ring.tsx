@@ -47,7 +47,7 @@ export function MacroRing({
 
   return (
     <View style={{ width: size, height: size }}>
-      <Svg width={size} height={size}>
+      <Svg width={size} height={size} style={{ transform: [{ rotate: '-90deg' }] }}>
         <Circle
           cx={size / 2}
           cy={size / 2}

@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import { Droplets, Plus } from 'lucide-react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { Text } from '@/components/ui/text';
+import { Card } from '@/components/ui/card';
 import { PressableScale } from '@/components/ui/pressable-scale';
 import { ProgressBar } from '@/components/ui/progress-bar';
 import { WATER_TARGET_ML } from '@/constants/macros';
@@ -23,7 +24,7 @@ export function WaterCard({ consumedMl, targetMl = WATER_TARGET_ML, onAdd, stepM
   const glasses = Array.from({ length: glassCount }, (_, i) => (i + 1) * stepMl);
 
   return (
-    <View className="rounded-3xl bg-surface p-5 shadow-sm dark:bg-neutral-900">
+    <Card>
       <View className="mb-4 flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
           <View className="h-9 w-9 items-center justify-center rounded-full bg-sky-100 dark:bg-sky-950">
@@ -43,10 +44,10 @@ export function WaterCard({ consumedMl, targetMl = WATER_TARGET_ML, onAdd, stepM
           onPress={onAdd}
           accessibilityRole="button"
           accessibilityLabel="Add a glass of water"
-          className="flex-row items-center gap-1 rounded-full bg-primary-soft px-3.5 py-2 dark:bg-emerald-900"
+          className="flex-row items-center gap-1 rounded-full bg-primary-100 px-3.5 py-2 dark:bg-primary-950/60"
         >
           <Plus size={14} color={colors.primary} />
-          <Text variant="footnote" weight="semibold" className="text-primary-softText dark:text-emerald-300">
+          <Text variant="footnote" weight="semibold" className="text-primary-800 dark:text-primary-400">
             Add
           </Text>
         </PressableScale>
@@ -69,6 +70,6 @@ export function WaterCard({ consumedMl, targetMl = WATER_TARGET_ML, onAdd, stepM
       </View>
 
       <ProgressBar value={pct} color="#0EA5E9" height={6} />
-    </View>
+    </Card>
   );
 }

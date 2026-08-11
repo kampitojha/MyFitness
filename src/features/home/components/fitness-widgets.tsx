@@ -24,11 +24,11 @@ export function FitnessWidgets({ onOpenSupplements, onOpenSleep }: FitnessWidget
   return (
     <View className="gap-3 mb-4">
       {/* Live Step Counter Widget */}
-      <Card className="p-4 bg-surface dark:bg-neutral-900 border border-border/60">
+      <Card>
         <View className="flex-row items-center justify-between mb-2">
           <View className="flex-row items-center gap-2">
-            <View className="h-9 w-9 rounded-xl bg-emerald-500/10 items-center justify-center">
-              <Footprints size={20} color="#0E7A4A" />
+            <View className="h-9 w-9 rounded-xl bg-primary-100 items-center justify-center dark:bg-primary-950/60">
+              <Footprints size={20} color="#22C55E" />
             </View>
             <View>
               <Text variant="subhead" weight="bold">Daily Step Counter</Text>
@@ -37,21 +37,21 @@ export function FitnessWidgets({ onOpenSupplements, onOpenSleep }: FitnessWidget
               </Text>
             </View>
           </View>
-          <Text variant="title2" weight="bold" className="text-primary-600 dark:text-emerald-400">
+          <Text variant="title2" weight="bold" className="text-primary-600 dark:text-primary-400">
             {formatNumber(steps)} <Text variant="caption2" color="muted">/ {formatNumber(STEP_GOAL)}</Text>
           </Text>
         </View>
 
         {/* Progress Bar */}
         <View className="h-2 w-full rounded-full bg-surface-alt dark:bg-neutral-800 overflow-hidden mb-1">
-          <View className="h-full rounded-full bg-primary-600 dark:bg-emerald-400" style={{ width: `${stepPct}%` }} />
+          <View className="h-full rounded-full bg-primary-600 dark:bg-primary-500" style={{ width: `${stepPct}%` }} />
         </View>
 
         <View className="flex-row justify-between pt-1">
           <Text variant="caption2" color="muted">
             Distance: {distance > 1000 ? `${(distance / 1000).toFixed(1)} km` : `${distance} m`}
           </Text>
-          <Text variant="caption2" weight="semibold" className="text-primary-600 dark:text-emerald-400">
+          <Text variant="caption2" weight="semibold" className="text-primary-600 dark:text-primary-400">
             ~{Math.round(steps * 0.04)} kcal burned
           </Text>
         </View>
@@ -61,7 +61,7 @@ export function FitnessWidgets({ onOpenSupplements, onOpenSleep }: FitnessWidget
       <View className="flex-row gap-3">
         {/* Supplement Widget */}
         <PressableScale onPress={onOpenSupplements} className="flex-1">
-          <Card className="p-3.5 bg-surface dark:bg-neutral-900 border border-border/60">
+          <Card>
             <View className="flex-row items-center justify-between mb-2">
               <View className="h-8 w-8 rounded-xl bg-purple-500/10 items-center justify-center">
                 <Pill size={18} color="#8B5CF6" />
@@ -79,7 +79,7 @@ export function FitnessWidgets({ onOpenSupplements, onOpenSleep }: FitnessWidget
 
         {/* Sleep Widget */}
         <PressableScale onPress={onOpenSleep} className="flex-1">
-          <Card className="p-3.5 bg-surface dark:bg-neutral-900 border border-border/60">
+          <Card>
             <View className="flex-row items-center justify-between mb-2">
               <View className="h-8 w-8 rounded-xl bg-indigo-500/10 items-center justify-center">
                 <Moon size={18} color="#6366F1" />
